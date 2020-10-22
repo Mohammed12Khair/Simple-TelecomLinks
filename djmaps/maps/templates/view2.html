@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %} 
+  <head>
+        <script src="/static/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/static/popper/popper.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap-4.0.0/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap-datepicker-1.6.4-dist/css/bootstrap-datepicker3.css"/>
+    <script src="/static/bootstrap-4.0.0/dist/js/bootstrap.js"></script>
+    <script src="/static/bootstrap-4.0.0/dist/js/bootstrap-confirmation.min.js"></script>
+    <script src="/static/bootstrap-datepicker-1.6.4-dist/js/bootstrap-datepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap-datepicker-1.6.4-dist/css/bootstrap-datepicker3.css"/>
+    <link rel="stylesheet" href="/static/custom/css/style.css">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.js"></script>
+    <style>
+
+      #map {
+        position:absolute;
+        width:100%;
+        height: 100%;
+        z-index: -1;
+
+    }
+    .site_down{
+        position: absolute;
+        text-align: center;
+    }
+    .Move{
+        z-index: 2;
+    } 
+      .custom_l{
+        font-weight: bold;
+      }
+    .customplace{
+          position: fixed;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          height: 6%;
+          background-color:#23;
+          color: blue;
+          text-align: center;
+          font-size: 14px;
+        }
+        nav{
+            background-color: black;
+            color: white;
+            z-index: 4;
+        }
+        ul{
+            position: relative;
+            left:10%;
+            text-decoration: none;
+            list-style: none;
+        }
+        li{
+            float: left;
+            padding: 10px;
+            }
+            .site_link{
+            position: absolute;
+            left: 93%;
+            text-align: center;
+            }
+    </style>
+
+  </head>
+  <body>
+{% include 'navbar.html' %}
+
+ <table class="site_down" >
+                <tr>
+                    <th>site</th>
+                    <th>status</th>
+                    <th>Weight</th>
+                </tr>
+                {% for f in info %}
+                <tr>
+                    <td>{{ f.site_id }}</td>
+                    <td>{{ f.site_status }}</td>
+                    <td>{{ f.site_weight }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+ <table class="site_link">
+                <tr>
+                    <th>Site A</th>
+                    <th>Site B</th>
+                </tr>
+                {% for ff in info_two %}
+                <tr>
+                    <td>{{ ff.site_A }}</td>
+                    <td>{{ ff.site_B }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+<form action="." method="POST" style="position: absolute; left:80%;top:70% ;z-index:1;">{% csrf_token %}
+   <label for="user">Site:<input id="user" type="text" name="site" class="form-control form-control-sm"></label><br>
+<div class="btn-group" role="group">
+<button type="submit" name="btn" value="add"    class="btn btn-primary"    style="cursor: pointer;" >ADD</button>
+<button type="submit" name="btn" value="search" class="btn btn-primary" style="cursor: pointer;" >Search</button>
+<button type="submit" name="btn" value="delete" class="btn btn-secondary" style="cursor: pointer;" >Delete</button>
+</div>
+
+</form>
+
+<div id="map"></div>
+
+     
+    
+
+    <script>     
+    var map = L.map('map').setView([{{ center }}], 12.5);
+   // L.map('map', {attributionControl: false})
+    document.getElementsByClassName( 'leaflet-control-attribution' )[0].style.display = 'none';
+    L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=bkYok3K8clVp1P611nOj',{
+        tileSize: 512, 
+        zoomOffset: -1,
+        minZoom: 1,
+        attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
+        crossOrigin: true
+      }).addTo(map);
+
+    var up = L.icon({iconUrl: '/static/icons/up.png',iconSize:[10, 10],});
+    var down = L.icon({iconUrl: '/static/icons/down.png',iconSize:[10, 10],});
+</script>
+
+{% for i in data %}
+<script> 
+var site  = L.marker([{{ i.site_lat }} , {{ i.site_long }}],{icon: {{ i.site_status }}}).addTo(map);
+site.bindPopup("i.site_E").openPopup(); 
+site.bindTooltip("{{ i.site_id }} | {{ i.site_name }} | {{ i.site_weight }}", {permanent: true, className: "custom_l", opacity: 0.5}).openTooltip();
+//site.bindTooltip("{{ i.site_id }}", {permanent: true, className: "custom_l"}).openTooltip();
+</script>
+{% endfor %}
+
+
+{%for a,b,c in Z %}
+<script>
+
+var A = new L.LatLng({{ a }});
+var B = new L.LatLng({{ b }});
+var list = [A, B];
+
+var firstpolyline = new L.Polyline(list,{color: '{{ c }}',weight: 3,opacity: 0.5,smoothFactor: 1});
+firstpolyline.addTo(map);
+
+</script>
+{% endfor %}
+
+
+<footer class="page-footer font-small blue customplace">
+<div class="footer-copyright text-center py-3">© Zain MS SiteMap Demo m84134292 MK
+  </div>
+</footer>
+
+
+  </body>
+</html>
