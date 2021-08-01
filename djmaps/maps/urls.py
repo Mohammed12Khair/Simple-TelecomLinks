@@ -1,6 +1,7 @@
 from django.conf.urls import url                                                                                                                              
 from . import views
+from django.urls import path
 
 urlpatterns = [ 
-    url(r'', views.default_map, name="default"),
+    path('', views.default_map, name="default"),
 ]
