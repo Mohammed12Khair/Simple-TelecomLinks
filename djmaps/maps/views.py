@@ -28,5 +28,5 @@ def default_map(request):
 		print(str(C[x]) + " : " + str(A[x]) + " --> " + str(B[x]))
 	max_=len(A)
 	d=zip(A,B,C)
-	return render(request,'home.html',{})
-	# return render(request,'view2.html',{'center':'15.2409,32.499','data':status,'max_':max_,'A':A,'B':B,'C':C,'Z':d,'info':info,'info_two':info_two})
+	# return render(request,'home.html',{})
+	return render(request,'view2.html',{'center':'15.2409,32.499','data':status,'max_':max_,'A':A,'B':B,'C':C,'Z':d,'info':info,'info_two':info_two})
