@@ -1,5 +1,21 @@
+from django.http.response import HttpResponse
 from django.shortcuts import render
+from django.contrib.auth import authenticate, login
 
 # Create your views here.
+
+
 def login_view(request):
-    return render(request,'login.html',{})
+    contex = {
+        'title': 'Simple Links'
+    }
+    if request.method == 'POST':
+        user = authenticate(
+            username=request.POST['username'], password=request.POST['password'])
+        if user is not None:
+            login(request, user)
+            return HttpResponse('Enter')
+        else:
+            contex['error'] = 'Wrong username or password'
+            return render(request, 'login.html', contex)
+    return render(request, 'login.html', contex)
