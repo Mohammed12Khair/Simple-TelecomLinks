@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'super_manger',
     'Auth',
+    'links',
 ]
 
 MIDDLEWARE = [
