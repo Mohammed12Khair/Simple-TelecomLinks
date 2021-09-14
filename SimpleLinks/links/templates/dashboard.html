@@ -1,18 +1,56 @@
 {% extends 'layout/base.html' %} {% block content %}
-
-<div class="row">
-    <div class="col">
-        <canvas id="myChart" width="400" height="400"></canvas>
-    </div>
-    <div class="col">
-        <canvas id="myChart" width="400" height="400"></canvas>
-    </div>
-    <div class="col">
-        <canvas id="myChart" width="400" height="400"></canvas>
+<div>
+    <ul class="nav nav-tabs">
+        <li class="nav-item"><a class="nav-link active" role="tab" data-toggle="tab" href="#graph">Graph</a></li>
+        <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#map">Maps</a></li>
+        <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#tab-3">Tab 3</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" role="tabpanel" id="graph">
+            <canvas id="myChart" width="400" height="400"></canvas>
+        </div>
+        <div class="tab-pane" role="tabpanel" id="map">
+            <div class="row">
+                <div class="col">
+                    <canvas id="myChart" width="400" height="400"></canvas>
+                </div>
+                <div class="col">
+                    <canvas id="myChart" width="400" height="400"></canvas>
+                </div>
+                <div class="col">
+                    <div style="width: 100%;height: 100%;" id="mapid"></div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" role="tabpanel" id="tab-3">
+            <p>Content for tab 3.</p>
+        </div>
     </div>
 </div>
+<!-- <div class="row">
+    <div class="col">
+        <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
+    <div class="col">
+        <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
+    <div class="col">
+        <div style="width: 100%;height: 100%;" id="mapid"></div>
+    </div>
+</div> -->
 
 {% endblock %} {% block chart %}
+<script>
+    var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibW9oYW1tZWRraGFpciIsImEiOiJja3RqdDVqbHMwMDl1MnZtanoyYmk2Zm5uIn0.CRgLiVlA1l1X86NhaUXAvQ', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'your.mapbox.access.token'
+    }).addTo(mymap);
+</script>
 <script>
     var ctx = document.getElementById('myChart').getContext('2d');
     var myChart = new Chart(ctx, {
