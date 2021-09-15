@@ -1,0 +1,47 @@
+<strong>{{ error }}</strong>
+<form id="form" action="." method="POST">{% csrf_token %}
+    <div class="form-row">
+        <div class="col">
+            <div class="form-group"><label>Site ID</label>
+                <input name="siteid" required minlength="{{ siteid_.value }}" maxlength="{{ siteid_.value }}" type="text" class="form-control" style="text-transform: uppercase" /></div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col">
+            <div class="form-group"><label>Site Name</label>
+                <input name="sitename" required maxlength="{{ sitename_.value }}" type="text" class="form-control" style="text-transform: uppercase" /></div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col">
+            <div class="form-group"><label>longitude</label>
+                <input name="longitude" required type="number" class="form-control" step="0.00001" /></div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col">
+            <div class="form-group"><label>Latitude</label>
+                <input name="Latitude" required type="number" class="form-control" step="0.00001" /></div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col">
+            <div class="form-group"><label>Site weight<br/></label>
+                <input name="site_weight" required type="number" class="form-control" /></div>
+        </div>
+    </div>
+    <div class="form-row text-center" style="margin-top: 3px;">
+        <div class="col">
+            <div class="form-group">
+                <button id="submitBtn" class="btn btn-primary" type="submit" disabled><i class="fa fa-check"></i>Add</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    const form = document.getElementById('form');
+    form.addEventListener("change", () => {
+        document.getElementById('submitBtn').disabled = !form.checkValidity()
+    });
+</script>

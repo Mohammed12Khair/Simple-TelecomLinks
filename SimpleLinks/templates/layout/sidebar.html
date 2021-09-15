@@ -13,17 +13,26 @@
             </li>
             <li class="nav-item" role="presentation">
                 <a class="nav-link" href="profile.html">
-                    <i class="fas fa-user"></i><span>Profile</span></a>
+                    <i class="fas fa-user"></i><span>Link#</span></a>
             </li>
             <li class="nav-item" role="presentation">
                 <a class="nav-link" href="table.html">
-                    <i class="fas fa-table"></i><span>Table</span></a>
+                    <i class="fas fa-table"></i><span>Link1#</span></a>
             </li>
             <li class="nav-item" role="presentation">
                 <a class="nav-link" href="/login.html">
-                    <i class="far fa-user-circle"></i><span>Login</span></a>
+                    <i class="far fa-user-circle"></i><span>Link2#</span></a>
             </li>
             <li class="nav-item dropdown">
+                <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">
+                    <i class="fa fa-star"></i>Site Manger</a>
+                <div class="dropdown-menu" role="menu">
+                    <a class="dropdown-item" role="presentation" href="{% url 'add_site' %}">Add new site</a>
+                    <a class="dropdown-item" role="presentation" href="#">Second Item</a>
+                    <a class="dropdown-item" role="presentation" href="#">Third Item</a>
+                </div>
+            </li>
+            <!-- <li class="nav-item dropdown">
                 <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">
                     <i class="fa fa-star"></i>Dropdown </a>
                 <div class="dropdown-menu" role="menu">
@@ -31,11 +40,11 @@
                     <a class="dropdown-item" role="presentation" href="#">Second Item</a>
                     <a class="dropdown-item" role="presentation" href="#">Third Item</a>
                 </div>
-            </li>
+            </li> -->
             <li class="nav-item" role="presentation">
                 <a class="nav-link" href="register.html">
                     <i class="fas fa-user-circle"></i>
-                    <span>Register</span>
+                    <span>Link4#</span>
                 </a>
             </li>
         </ul>

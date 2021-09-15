@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{% static 'assets/fonts/fontawesome5-overrides.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/styles.min.css' %}">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css" />
 </head>
 
 <body id="page-top">
@@ -39,8 +40,10 @@
     <script src="{% static 'assets/js/script.min.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
 
-    {% block chart %} {% endblock %}
+
+    {% block chart %} {% endblock %} {% block jscode %} {% endblock %}
 
 </body>
 
