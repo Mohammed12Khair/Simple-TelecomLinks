@@ -53,7 +53,11 @@ def site_manger(request):
     }
     if request.method == "POST":
         if request.POST['action'] == "check_site_name" and request.is_ajax():
-            return HttpResponse('asdasdasdasdas')
+            if site_map.objects.filter(siteid= request.POST['siteid']).exists():
+                return HttpResponse('1')
+            else:
+                return HttpResponse('0')
+
         if request.POST['action'] == "site_manger_add":
             DB=siteaction('site_manger_add',request)
         if request.POST['action'] == "site_manger_edit":

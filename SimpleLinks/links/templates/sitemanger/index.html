@@ -96,10 +96,15 @@
             url: '../site_manger/',
             data: {
                 'action': 'check_site_name',
+                'siteid': $(this).val(),
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             success: function(data) {
-                alert(data);
+                if (parseInt(data) == 1) {
+                    $(this).css('color', 'red');
+                } else {
+                    $(this).css('color', 'black');
+                }
             }
         });
     });
