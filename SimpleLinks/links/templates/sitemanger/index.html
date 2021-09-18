@@ -3,24 +3,40 @@
     <!-- <h3 class="text-dark mb-4">Team</h3> -->
     <div class="card shadow">
         <div class="card-header py-3">
-            <p class="text-primary m-0 font-weight-bold">Site List<button class="btn btn-sm btn-info pull-right" data-toggle="modal" data-target="#exampleModal">Add Site</button></p>
+            <p class="text-primary m-0 font-weight-bold">Site List <small style="color: red;;">{{msg}} </small>
+                <button class="btn btn-sm btn-info pull-right" data-toggle="modal" data-target="#exampleModal">Add Site</button>
+            </p>
         </div>
         <div class="card-body">
             <div class="table-responsive" role="grid" aria-describedby="dataTable_info">
                 <table class="table table-sm" id="myTable">
                     <thead>
                         <tr style="font-weight: bold;">
-                            <th>Name</th>
-                            <th>ID</th>
-                            <th>Status</th>
+                            <th>#</th>
+                            <th>SITE NAME</th>
+                            <th>SITE ID</th>
+                            <th>LONG</th>
+                            <th>LAT</th>
+                            <th>WEIGHT</th>
+                            <th>STATUS</th>
+                            <th style="text-align: center;">ACTIONS</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for i in site_map_data %}
                         <tr>
-                            <td>{{i.site_id}}</td>
-                            <td>{{i.site_name}}</td>
-                            <td>{{i.site_status}}</td>
+
+                            <td>{{ forloop.counter }}</td>
+                            <td class="{{i.id}}siteid">{{i.siteid}}</td>
+                            <td class="{{i.id}}sitename">{{i.sitename}}</td>
+                            <td class="{{i.id}}long">{{i.long}}</td>
+                            <td class="{{i.id}}lat">{{i.lat}}</td>
+                            <td class="{{i.id}}weight">{{i.weight}}</td>
+                            <td class="{{i.id}}status">{{i.status}}</td>
+                            <td style="text-align: center;">
+                                <button class="btn btn-sm btn-info edit_site_btn" data-toggle="modal" data-target="#editform" row="{{i.id}}"><i class="fa fa-edit"></i> EDIT</button>
+                                <button class="btn btn-sm btn-danger" type="submit" name="action" value="delete{{i.id}}"><i class="fa fa-trash"></i> DELETE</button>
+                            </td>
                         </tr>
 
                         {% endfor %}
@@ -59,36 +75,18 @@
 </div>
 
 
-<!-- Button trigger modal
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-    Launch demo modal
-  </button> -->
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-center" id="exampleModalLabel">Add New Site</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-            </div>
-            <div class="modal-body">
-                {% include 'sitemanger/add_site.html' %}
-            </div>
-            <!-- <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div> -->
-        </div>
-    </div>
-</div>
-
-{% endblock %} {% block jscode %}
+{% include 'sitemanger/add_site.html' %} {% include 'sitemanger/edit_site.html' %} {% endblock %} {% block jscode %}
 <script>
     $(document).ready(function() {
         $('#myTable').DataTable();
+    });
+    $(document).on('click', '.edit_site_btn', function() {
+        $('#id').val($(this).attr('row'));
+        $('#siteid').val(($('.' + $(this).attr('row') + 'siteid').html()));
+        $('#sitename').val(($('.' + $(this).attr('row') + 'sitename').html()));
+        $('#long').val(($('.' + $(this).attr('row') + 'long').html()));
+        $('#lat').val(($('.' + $(this).attr('row') + 'lat').html()));
+        $('#weight').val(($('.' + $(this).attr('row') + 'weight').html()));
     });
 </script>
 {% endblock %}

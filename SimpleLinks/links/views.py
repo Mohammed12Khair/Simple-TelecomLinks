@@ -51,6 +51,12 @@ def site_manger(request):
         'site_map_data':site_map_data,
     }
     if request.method == "POST":
-        DB=siteaction('addsite',request)
-        DB.start()
+        if request.POST['action'] == "site_manger_add":
+            DB=siteaction('site_manger_add',request)
+        if request.POST['action'] == "site_manger_edit":
+            DB=siteaction('site_manger_edit',request)
+        if DB.commit() is not None:
+            contex['msg']=DB.commit()
+        
+
     return render(request,'sitemanger/index.html',contex)
