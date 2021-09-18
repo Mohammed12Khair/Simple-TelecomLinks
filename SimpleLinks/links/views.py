@@ -4,6 +4,8 @@ from django.core.exceptions import PermissionDenied
 from super_manger.models import siteAttr
 from .models import site_map
 
+from .transactions import siteaction
+
 # Create your views here.
 def dashboard(request):
     return render(request,'home/dashboard.html',{})
@@ -48,5 +50,7 @@ def site_manger(request):
         'sitename_':sitename_,
         'site_map_data':site_map_data,
     }
-
+    if request.method == "POST":
+        DB=siteaction('addsite',request)
+        DB.start()
     return render(request,'sitemanger/index.html',contex)
