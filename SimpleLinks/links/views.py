@@ -1,3 +1,4 @@
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied
@@ -58,3 +59,7 @@ def site_manger(request):
         if DB.commit() is not None:
             contex['msg']=DB.commit()
     return render(request,'sitemanger/index.html',contex)
+
+
+def site_manger_delete(request,id):
+    return HttpResponseRedirect('/site_manger')
