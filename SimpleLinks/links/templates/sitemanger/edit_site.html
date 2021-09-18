@@ -8,11 +8,8 @@
                 </button>
             </div>
             <div class="modal-body">
-
                 <strong>{{ error }}</strong>
-
                 <form id="edit_form" action="." method="POST">{% csrf_token %}
-
                     <input name="id" id="id" required hidden>
                     <div class="form-row">
                         <div class="col">
@@ -61,13 +58,11 @@
         </div>
     </div>
 </div>
-
 <script>
     const editform = document.getElementById('edit_form');
     editform.addEventListener("change", () => {
         document.getElementById('submitBtnEdit').disabled = !editform.checkValidity()
     });
-
     editform.addEventListener("keyup", () => {
         document.getElementById('submitBtnEdit').disabled = !editform.checkValidity()
     });
