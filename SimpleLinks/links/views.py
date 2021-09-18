@@ -52,6 +52,8 @@ def site_manger(request):
         'site_map_data':site_map_data,
     }
     if request.method == "POST":
+        if request.POST['action'] == "check_site_name" and request.is_ajax():
+            return HttpResponse('asdasdasdasdas')
         if request.POST['action'] == "site_manger_add":
             DB=siteaction('site_manger_add',request)
         if request.POST['action'] == "site_manger_edit":
@@ -59,7 +61,7 @@ def site_manger(request):
         if DB.commit() is not None:
             contex['msg']=DB.commit()
     return render(request,'sitemanger/index.html',contex)
-    
+
 def site_manger_delete(request,id):
     try:
         site_map.objects.filter(id=id).delete()

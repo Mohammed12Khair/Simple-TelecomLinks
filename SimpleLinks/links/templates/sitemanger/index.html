@@ -25,7 +25,6 @@
                     <tbody>
                         {% for i in site_map_data %}
                         <tr>
-
                             <td>{{ forloop.counter }}</td>
                             <td class="{{i.id}}siteid">{{i.siteid}}</td>
                             <td class="{{i.id}}sitename">{{i.sitename}}</td>
@@ -87,6 +86,22 @@
         $('#long').val(($('.' + $(this).attr('row') + 'long').html()));
         $('#lat').val(($('.' + $(this).attr('row') + 'lat').html()));
         $('#weight').val(($('.' + $(this).attr('row') + 'weight').html()));
+    });
+
+
+
+    $(document).on('keyup', '#siteid', function() {
+        $.ajax({
+            type: "POST",
+            url: '../site_manger/',
+            data: {
+                'action': 'check_site_name',
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(data) {
+                alert(data);
+            }
+        });
     });
 </script>
 {% endblock %}
