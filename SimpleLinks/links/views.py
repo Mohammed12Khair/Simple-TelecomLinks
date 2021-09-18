@@ -57,6 +57,4 @@ def site_manger(request):
             DB=siteaction('site_manger_edit',request)
         if DB.commit() is not None:
             contex['msg']=DB.commit()
-        
-
     return render(request,'sitemanger/index.html',contex)
