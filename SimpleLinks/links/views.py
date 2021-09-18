@@ -59,7 +59,10 @@ def site_manger(request):
         if DB.commit() is not None:
             contex['msg']=DB.commit()
     return render(request,'sitemanger/index.html',contex)
-
-
+    
 def site_manger_delete(request,id):
-    return HttpResponseRedirect('/site_manger')
+    try:
+        site_map.objects.filter(id=id).delete()
+    except Exception as e:
+        str(e)
+    return HttpResponseRedirect('../site_manger')
