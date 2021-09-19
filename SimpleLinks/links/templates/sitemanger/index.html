@@ -2,8 +2,8 @@
 <div class="container-fluid">
     <div class="card shadow">
         <div class="card-header py-3">
-            <p class="text-primary m-0 font-weight-bold">Site List <small style="color: red;;">{{msg}} </small>
-                <button class="btn btn-sm btn-info pull-right" data-toggle="modal" data-target="#exampleModal">Add Site</button>
+            <p class="text-primary m-0 font-weight-bold">{{ title }} <small style="color: red;;">{{msg}} </small>
+                <button class="btn btn-md btn-success pull-right" data-toggle="modal" data-target="#exampleModal"> <i class="fa fa-plus-circle"></i> Add Site</button>
             </p>
         </div>
         <div class="card-body">
@@ -21,7 +21,7 @@
                             <th style="text-align: center;">ACTIONS</th>
                         </tr>
                     </thead>
-                    <tbody id="TableBody">
+                    <tbody id="TableData">
                         {% for i in site_map_data %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
@@ -47,7 +47,50 @@
 {% include 'sitemanger/add_site.html' %} {% include 'sitemanger/edit_site.html' %} {% endblock %} {% block jscode %}
 
 <script>
-    $(document).on('click', '.submitBtn', function() {
+    $("#edit_form").submit(function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: '../site_manger/',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                'id': $('#id_edit').val(),
+                'siteid': $('#siteid_edit').val(),
+                'sitename': $('#sitename_edit').val(),
+                'long': $('#long_edit').val(),
+                'lat': $('#lat_edit').val(),
+                'weight': $('#weight_edit').val(),
+                'action': $('#submitBtnEdit').val(),
+                // 'siteid': $('#siteid_add').val(),
+            },
+            success: function(data) {
+                // console.log(data.error);
+                // console.log(data.msg);
+                // console.log(data.TableData);
+                if (data.error == 0) {
+                    swal(data.msg, {
+                        icon: "success",
+                    });
+                    $('#TableData').html(data.TableData);
+                    $('.close_edit').click();
+                    $('#id_edit').val('');
+                    $('#siteid_edit').val('');
+                    $('#sitename_edit').val('');
+                    $('#long_edit').val('');
+                    $('#lat_edit').val('');
+                    $('#weight_edit').val('');
+                } else {
+                    swal(data.msg, {
+                        icon: "error",
+                    });
+                    $('#TableData').html(data.TableData);
+                }
+            }
+        });
+    });
+
+    $("#ADD_SITE_FORM").submit(function(e) {
+        e.preventDefault();
         $.ajax({
             type: "POST",
             url: '../site_manger/',
@@ -58,22 +101,32 @@
                 'long': $('#long_add').val(),
                 'lat': $('#lat_add').val(),
                 'weight': $('#weight_add').val(),
-                'action': $(this).val(),
+                'action': $('#submitBtn').val(),
                 // 'siteid': $('#siteid_add').val(),
             },
             success: function(data) {
+                // console.log(data.error);
+                // console.log(data.msg);
+                // console.log(data.TableData);
                 if (data.error == 0) {
                     swal(data.msg, {
                         icon: "success",
                     });
+                    $('#TableData').html(data.TableData);
+                    $('.close_add').click();
+                    $('#siteid_add').val('');
+                    $('#sitename_add').val('');
+                    $('#long_add').val('');
+                    $('#lat_add').val('');
+                    $('#weight_add').val('');
                 } else {
                     swal(data.msg, {
                         icon: "error",
                     });
+                    $('#TableData').html(data.TableData);
                 }
             }
         });
-
     });
 
 
@@ -124,6 +177,8 @@
         $('#lat_edit').val(($('.' + $(this).attr('row') + 'lat').html()));
         $('#weight_edit').val(($('.' + $(this).attr('row') + 'weight').html()));
     });
+
+
     $(document).on('keyup', '#siteid', function() {
         $.ajax({
             type: "POST",

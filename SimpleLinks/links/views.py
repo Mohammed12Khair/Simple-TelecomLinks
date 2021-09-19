@@ -55,6 +55,7 @@ def site_manger(request):
         'siteid_': siteid_,
         'sitename_': sitename_,
         'site_map_data': site_map_data,
+        'title':'Sites Manger'
     }
     if request.method == "POST":
         if request.POST['action'] == "check_site_name" and request.is_ajax():
@@ -73,14 +74,27 @@ def site_manger(request):
             else:
                 status={
                     'error': '0',
-                    'msg': DB.commit(),
+                    'msg': 'Site added success',
                     'TableData':DB.TableData()
                 }
             return JsonResponse(status,safe=False)
-        if request.POST['action'] == "site_manger_edit":
+        if request.POST['action'] == "site_manger_edit" and request.is_ajax():
             DB = siteaction('site_manger_edit', request)
             if DB.commit() is not None:
-                contex['msg'] = DB.commit()
+                status = {
+                    'error': '1',
+                    'msg': DB.commit(),
+                    'TableData':DB.TableData()
+                }
+            else:
+                status={
+                    'error': '0',
+                    'msg': 'Site edit success',
+                    'TableData':DB.TableData()
+                }
+            return JsonResponse(status,safe=False)
+            # if DB.commit() is not None:
+            #     contex['msg'] = DB.commit()
     return render(request, 'sitemanger/index.html', contex)
 
 
