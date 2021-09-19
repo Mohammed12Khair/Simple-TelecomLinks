@@ -13,36 +13,36 @@
                     <input name="id" id="id" required hidden>
                     <div class="form-row">
                         <div class="col">
-                            <div class="form-group"><label>Site ID</label>
-                                <input name="siteid" id="siteid" required minlength="{{ siteid_.value }}" maxlength="{{ siteid_.value }}" type="text" class="form-control" style="text-transform: uppercase" />
+                            <div class="form-group"><label>Site ID</label><small id="error" style="color: red;"></small>
+                                <input name="siteid" id="siteid_edit" required minlength="{{ siteid_.value }}" maxlength="{{ siteid_.value }}" type="text" class="form-control" style="text-transform: uppercase" />
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col">
                             <div class="form-group"><label>Site Name</label>
-                                <input name="sitename" id="sitename" required maxlength="{{ sitename_.value }}" type="text" class="form-control" style="text-transform: uppercase" />
+                                <input name="sitename" id="sitename_edit" required maxlength="{{ sitename_.value }}" type="text" class="form-control" style="text-transform: uppercase" />
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col">
                             <div class="form-group"><label>longitude</label>
-                                <input name="long" id="long" required type="number" class="form-control" step="0.00001" />
+                                <input name="long" id="long_edit" required type="number" class="form-control" step="0.00001" />
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col">
                             <div class="form-group"><label>Latitude</label>
-                                <input name="lat" id="lat" required type="number" class="form-control" step="0.00001" />
+                                <input name="lat" id="lat_edit" required type="number" class="form-control" step="0.00001" />
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col">
                             <div class="form-group"><label>Site weight<br /></label>
-                                <input name="weight" id="weight" required type="number" class="form-control" />
+                                <input name="weight" id="weight_edit" required type="number" class="form-control" />
                             </div>
                         </div>
                     </div>
@@ -59,11 +59,11 @@
     </div>
 </div>
 <script>
-    const editform = document.getElementById('edit_form');
-    editform.addEventListener("change", () => {
-        document.getElementById('submitBtnEdit').disabled = !editform.checkValidity()
-    });
-    editform.addEventListener("keyup", () => {
-        document.getElementById('submitBtnEdit').disabled = !editform.checkValidity()
-    });
+    // const editform = document.getElementById('edit_form');
+    // editform.addEventListener("change", () => {
+    //     document.getElementById('submitBtnEdit').disabled = !editform.checkValidity()
+    // });
+    // editform.addEventListener("keyup", () => {
+    //     document.getElementById('submitBtnEdit').disabled = !editform.checkValidity()
+    // });
 </script>

@@ -8,69 +8,62 @@
                 </button>
             </div>
             <div class="modal-body">
-
                 <strong>{{ error }}</strong>
-
-                <form id="ADD_SITE_FORM" action="." method="POST">{% csrf_token %}
+                <form onsubmit="this.preventDefault()">
                     <div class="form-row">
                         <div class="col">
-                            <div class="form-group"><label>Site ID</label>
-                                <input name="siteid" required minlength="{{ siteid_.value }}" maxlength="{{ siteid_.value }}" type="text" class="form-control" style="text-transform: uppercase" />
+                            <div class="form-group"><label>Site ID</label><small id="error" style="color: red;"></small>
+                                <input id="siteid_add" name="siteid" required minlength="{{ siteid_.value }}" maxlength="{{ siteid_.value }}" type="text" class="form-control" style="text-transform: uppercase" />
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col">
                             <div class="form-group"><label>Site Name</label>
-                                <input name="sitename" required maxlength="{{ sitename_.value }}" type="text" class="form-control" style="text-transform: uppercase" />
+                                <input id="sitename_add" name="sitename" required maxlength="{{ sitename_.value }}" type="text" class="form-control" style="text-transform: uppercase" />
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col">
                             <div class="form-group"><label>longitude</label>
-                                <input name="long" required type="number" class="form-control" step="0.00001" />
+                                <input id="long_add" name="long" required type="number" class="form-control" step="0.00001" />
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col">
                             <div class="form-group"><label>Latitude</label>
-                                <input name="lat" required type="number" class="form-control" step="0.00001" />
+                                <input id="lat_add" name="lat" required type="number" class="form-control" step="0.00001" />
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col">
                             <div class="form-group"><label>Site weight<br /></label>
-                                <input name="weight" required type="number" class="form-control" />
+                                <input id="weight_add" name="weight" required type="number" class="form-control" />
                             </div>
                         </div>
                     </div>
                     <div class="form-row text-center" style="margin-top: 3px;">
                         <div class="col">
                             <div class="form-group">
-                                <button id="submitBtn" class="btn btn-primary" type="submit" name="action" value="site_manger_add" disabled><i class="fa fa-check"></i>Add</button>
+                                <button id="submitBtn" class="btn btn-primary" name="action" value="site_manger_add" disabled><i class="fa fa-check"></i>Add</button>
                             </div>
                         </div>
                     </div>
                 </form>
-
             </div>
-            <!-- <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    <button type="button" class="btn btn-primary">Save changes</button>
-</div> -->
         </div>
     </div>
 </div>
 
 <script>
-    const form = document.getElementById('ADD_SITE_FORM');
-    form.addEventListener("change", () => {
-        document.getElementById('submitBtn').disabled = !form.checkValidity()
-    });
-    form.addEventListener("keyup", () => {
-        document.getElementById('submitBtn').disabled = !form.checkValidity()
-    });
+    // const form = document.getElementById('ADD_SITE_FORM');
+    // form.addEventListener("change", () => {
+    //     document.getElementById('submitBtn').disabled = !form.checkValidity()
+    // });
+    // form.addEventListener("keyup", () => {
+    //     document.getElementById('submitBtn').disabled = !form.checkValidity()
+    // });
 </script>

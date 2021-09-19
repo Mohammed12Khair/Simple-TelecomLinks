@@ -1,6 +1,5 @@
 {% extends 'layout/base.html' %} {% block content %}
 <div class="container-fluid">
-    <!-- <h3 class="text-dark mb-4">Team</h3> -->
     <div class="card shadow">
         <div class="card-header py-3">
             <p class="text-primary m-0 font-weight-bold">Site List <small style="color: red;;">{{msg}} </small>
@@ -22,7 +21,7 @@
                             <th style="text-align: center;">ACTIONS</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="TableBody">
                         {% for i in site_map_data %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
@@ -34,62 +33,97 @@
                             <td class="{{i.id}}status">{{i.status}}</td>
                             <td style="text-align: center;">
                                 <button class="btn btn-sm btn-info edit_site_btn" data-toggle="modal" data-target="#editform" row="{{i.id}}"><i class="fa fa-edit"></i> EDIT</button>
-                                <a class="btn btn-sm btn-danger" href="{% url 'delete' id=i.id %}" onclick="return confirm('Are you sure?');"><i class="fa fa-trash"></i> DELETE</a>
+                                <button class="btn btn-sm btn-danger delete_btn" row="{{i.id}}"><i class="fa fa-trash"></i> DELETE</button>
                             </td>
                         </tr>
-
                         {% endfor %}
-
                     </tbody>
-                    <!-- <tfoot>
-                        <tr>
-                            <td><strong>Name</strong></td>
-                            <td><strong>Position</strong></td>
-                            <td><strong>Office</strong></td>
-                            <td><strong>Age</strong></td>
-                            <td><strong>Start date</strong></td>
-                            <td><strong>Salary</strong></td>
-                        </tr>
-                    </tfoot> -->
                 </table>
             </div>
-            <!-- <div class="row">
-                <div class="col-md-6 align-self-center">
-                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
-                </div>
-                <div class="col-md-6">
-                    <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                        <ul class="pagination">
-                            <li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </div> -->
         </div>
     </div>
 </div>
 
-
 {% include 'sitemanger/add_site.html' %} {% include 'sitemanger/edit_site.html' %} {% endblock %} {% block jscode %}
+
 <script>
+    $(document).on('click', '.submitBtn', function() {
+        $.ajax({
+            type: "POST",
+            url: '../site_manger/',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                'siteid': $('#siteid_add').val(),
+                'sitename': $('#sitename_add').val(),
+                'long': $('#long_add').val(),
+                'lat': $('#lat_add').val(),
+                'weight': $('#weight_add').val(),
+                'action': $(this).val(),
+                // 'siteid': $('#siteid_add').val(),
+            },
+            success: function(data) {
+                if (data.error == 0) {
+                    swal(data.msg, {
+                        icon: "success",
+                    });
+                } else {
+                    swal(data.msg, {
+                        icon: "error",
+                    });
+                }
+            }
+        });
+
+    });
+
+
+    $(document).on('click', '.delete_btn', function() {
+        var whichtr = $(this).closest("tr");
+        swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this Site Data!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        type: "POST",
+                        url: '../site_manger_delete/',
+                        data: {
+                            'id': $(this).attr('row'),
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function(data) {
+                            if (data.error == 0) {
+                                swal(data.msg, {
+                                    icon: "success",
+                                });
+                                whichtr.remove();
+                            } else {
+                                swal(data.msg, {
+                                    icon: "error",
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+    });
+
     $(document).ready(function() {
         $('#myTable').DataTable();
     });
+
     $(document).on('click', '.edit_site_btn', function() {
-        $('#id').val($(this).attr('row'));
-        $('#siteid').val(($('.' + $(this).attr('row') + 'siteid').html()));
-        $('#sitename').val(($('.' + $(this).attr('row') + 'sitename').html()));
-        $('#long').val(($('.' + $(this).attr('row') + 'long').html()));
-        $('#lat').val(($('.' + $(this).attr('row') + 'lat').html()));
-        $('#weight').val(($('.' + $(this).attr('row') + 'weight').html()));
+        $('#id_edit').val($(this).attr('row'));
+        $('#siteid_edit').val(($('.' + $(this).attr('row') + 'siteid').html()));
+        $('#sitename_edit').val(($('.' + $(this).attr('row') + 'sitename').html()));
+        $('#long_edit').val(($('.' + $(this).attr('row') + 'long').html()));
+        $('#lat_edit').val(($('.' + $(this).attr('row') + 'lat').html()));
+        $('#weight_edit').val(($('.' + $(this).attr('row') + 'weight').html()));
     });
-
-
-
     $(document).on('keyup', '#siteid', function() {
         $.ajax({
             type: "POST",
@@ -101,9 +135,36 @@
             },
             success: function(data) {
                 if (parseInt(data) == 1) {
-                    $(this).css('color', 'red');
+                    $('#siteid').css("color", "red");
+                    $('#submitBtnEdit').prop('disabled', true);
+                    $('#error').html('Name already used.');
                 } else {
-                    $(this).css('color', 'black');
+                    $('#siteid').css("color", "black");
+                    $('#submitBtnEdit').prop('disabled', false);
+                    $('#error').html('');
+                }
+            }
+        });
+    });
+
+    $(document).on('keyup', '#siteid_add', function() {
+        $.ajax({
+            type: "POST",
+            url: '../site_manger/',
+            data: {
+                'action': 'check_site_name',
+                'siteid': $(this).val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(data) {
+                if (parseInt(data) == 1) {
+                    $('#siteid_add').css("color", "red");
+                    $('#submitBtn').prop('disabled', true);
+                    $('#error').html('Name already used.');
+                } else {
+                    $('#siteid_add').css("color", "black");
+                    $('#submitBtn').prop('disabled', false);
+                    $('#error').html('');
                 }
             }
         });
