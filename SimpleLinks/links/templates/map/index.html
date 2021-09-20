@@ -1,0 +1,85 @@
+{% extends 'layout/base.html' %} {% block content %}
+
+<div class="row">
+    <div class="col-md-4 rounded-1 shadow-sm">
+        <button onclick="add()">Add</button>
+    </div>
+    <div class="col-md-8">
+        <div style="height:780px;width: 100%;" id="mapid"></div>
+    </div>
+</div>
+
+
+
+{% endblock %} {% block chart %}
+<script>
+    var mymap = L.map('mapid', {
+        attributionControl: false
+    }).setView([51.505, -0.09], 13);
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibW9oYW1tZWRraGFpciIsImEiOiJja3RqdDVqbHMwMDl1MnZtanoyYmk2Zm5uIn0.CRgLiVlA1l1X86NhaUXAvQ', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'your.mapbox.access.token'
+    }).addTo(mymap);
+
+    // var marker = new L.marker([51.505, -0.10]).addTo(mymap);
+    // var marker = new L.marker([51.515, -0.09]).addTo(mymap);
+    // var marker = new L.marker([51.505, -0.08]).addTo(mymap);
+
+
+    function initialization_() {
+
+        // var marle = new L.marker([51.505, -0.09]).addTo(mymap);
+        $.ajax({
+            type: "POST",
+            url: '../maps/initialization_',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                'action': 'initialization_'
+            },
+            success: function(data) {
+                for (var i = 0; i < data.length; i++) {
+                    console.log(data[i].siteid);
+                    marker = new L.marker([data[i].long, data[i].lat])
+                        .bindPopup(data[i].siteid)
+                        .title('asdsad')
+                        .addTo(mymap);
+                }
+            }
+        });
+    }
+
+
+    initialization_();
+
+
+    //     var locations = [
+    //   ["LOCATION_1", 11.8166, 122.0942],
+    //   ["LOCATION_2", 11.9804, 121.9189],
+    //   ["LOCATION_3", 10.7202, 122.5621],
+    //   ["LOCATION_4", 11.3889, 122.6277],
+    //   ["LOCATION_5", 10.5929, 122.6325]
+    // ];
+
+    // var map = L.map('map').setView([11.206051, 122.447886], 8);
+    // mapLink =
+    //   '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+    // L.tileLayer(
+    //   'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //     attribution: '&copy; ' + mapLink + ' Contributors',
+    //     maxZoom: 18,
+    //   }).addTo(map);
+
+    // for (var i = 0; i < locations.length; i++) {
+    //   marker = new L.marker([locations[i][1], locations[i][2]])
+    //     .bindPopup(locations[i][0])
+    //     .addTo(map);
+    // }
+</script>
+
+
+
+{% endblock %}

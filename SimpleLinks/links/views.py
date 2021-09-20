@@ -1,3 +1,4 @@
+from json.encoder import JSONEncoder
 from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
@@ -111,3 +112,17 @@ def site_manger_delete(request):
             'msg': 'Failed'
         }
     return JsonResponse(status, safe=False)
+
+
+def maps(request):
+    return render(request,'map/index.html',{})
+
+
+def initialization_(request):
+    if request.method == "POST" and request.is_ajax():
+        if request.POST['action'] == 'initialization_':
+            initialization_data=list(site_map.objects.all().values('siteid','long','lat'))
+            # JSONEncoder(initialization_data)
+            return JsonResponse(initialization_data,safe=False)
+        return HttpResponse("asd")
+    return HttpResponse("asdsad")
