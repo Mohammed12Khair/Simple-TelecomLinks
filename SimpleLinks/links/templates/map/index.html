@@ -2,7 +2,13 @@
 
 <div class="row">
     <div class="col-md-4 rounded-1 shadow-sm">
-        <button onclick="add()">Add</button>
+        <!-- <button onclick="add()">Add</button> -->
+        <div class="row">
+            <div class="col">
+                <h6>Find site</h6>
+            </div>
+            <div class="col"></div>
+        </div>
     </div>
     <div class="col-md-8">
         <div style="height:780px;width: 100%;" id="mapid"></div>
@@ -25,14 +31,8 @@
         accessToken: 'your.mapbox.access.token'
     }).addTo(mymap);
 
-    // var marker = new L.marker([51.505, -0.10]).addTo(mymap);
-    // var marker = new L.marker([51.515, -0.09]).addTo(mymap);
-    // var marker = new L.marker([51.505, -0.08]).addTo(mymap);
-
 
     function initialization_() {
-
-        // var marle = new L.marker([51.505, -0.09]).addTo(mymap);
         $.ajax({
             type: "POST",
             url: '../maps/initialization_',
@@ -41,13 +41,22 @@
                 'action': 'initialization_'
             },
             success: function(data) {
+
                 for (var i = 0; i < data.length; i++) {
                     console.log(data[i].siteid);
-                    marker = new L.marker([data[i].long, data[i].lat])
-                        .bindPopup(data[i].siteid)
-                        .title('asdsad')
-                        .addTo(mymap);
+                    marker = new L.marker([data[i].long, data[i].lat], {
+                            'alt': data[i].siteid
+                        })
+                        .bindPopup(data[i].siteid);
+                    var new_popup = L.popup({
+                        "autoClose": false,
+                        "closeOnClick": null
+                    });
+                    new_popup.setContent(data[i].siteid + "<br>" + data[i].long + "<br>" + data[i].lat);
+                    marker.bindPopup(new_popup).openPopup();
+                    marker.addTo(mymap);
                 }
+                // mymap.setView([51.505, -0.15])
             }
         });
     }
