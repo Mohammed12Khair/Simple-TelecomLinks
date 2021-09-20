@@ -113,10 +113,8 @@ def site_manger_delete(request):
         }
     return JsonResponse(status, safe=False)
 
-
 def maps(request):
     return render(request,'map/index.html',{})
-
 
 def initialization_(request):
     if request.method == "POST" and request.is_ajax():

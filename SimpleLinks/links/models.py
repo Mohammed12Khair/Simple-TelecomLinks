@@ -10,3 +10,8 @@ class site_map(models.Model):
 	status = models.CharField(max_length=1000,default='')
 	impact = models.CharField(max_length=1000,default='')
 	impact_by = models.CharField(max_length=1000,default='')
+
+class links(models.Model):
+	siteA=models.IntegerField()
+	siteB=models.IntegerField()
+	link_name=models.CharField(max_length=500,default='')
