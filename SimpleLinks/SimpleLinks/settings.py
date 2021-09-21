@@ -53,6 +53,31 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
+# AUTHENTICATION_BACKENDS = [
+#     "django_auth_ldap.backend.LDAPBackend",
+#     "django.contrib.auth.backends.ModelBackend",
+# ]
+
+LDAP_SERVER_URI_LINK = "ldap://192.168.1.11"
+
+# if request.method == 'POST':
+# 		username = request.POST['username']
+# 		password = request.POST['password']
+# 		try:
+# 			user = User.objects.get(username=str(username))
+# 			user.set_password("auth_on_ad")
+# 			user.save()
+# 			try:
+# 				s = Server('ldap://192.168.1.11')
+# 				c = Connection(s, user=str(username) + "@sd.zain.com", password=str(password))	
+# 				c.bind()
+# 			except Exception as e:
+# 				return render(request, 'login2.html', {'title': 'Login','auth_error':'Errot in Active Directory Connection'})
+# 			if c.bind():
+# 				auth = authenticate(username=username,password="auth_on_ad")
+# 				login(request,auth)
+# 				return HttpResponseRedirect('../pretool/')
 ROOT_URLCONF = 'SimpleLinks.urls'
 
 TEMPLATES = [

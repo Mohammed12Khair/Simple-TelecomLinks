@@ -1,7 +1,8 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
-
+# from ldap3 import Server, Connection, ALL
+# from django.conf import Settings
 # Create your views here.
 
 
@@ -10,6 +11,9 @@ def login_view(request):
         'title': 'Simple Links'
     }
     if request.method == 'POST':
+        # s = Server('ldap://192.168.1.11')
+        # c = Connection(s, user=request.POST['username'] + "@sd.zain.com", password=request.POST['password'])	
+        # return HttpResponse(c.bind())
         user = authenticate(
             username=request.POST['username'], password=request.POST['password'])
         if user is not None:
