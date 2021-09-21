@@ -6,16 +6,12 @@ from django.core.exceptions import PermissionDenied
 from super_manger.models import siteAttr
 from .models import site_map
 
+# cust class
 from .transactions import siteaction
 
 # Create your views here.
-
-
 def dashboard(request):
     return render(request, 'home/dashboard.html', {})
-
-# Site manger
-
 
 @permission_required('AddSite', raise_exception=True)
 def add_site(request):
@@ -46,7 +42,6 @@ def add_site(request):
         }
 
     return render(request, 'sitemanger/add_site.html', contex)
-
 
 def site_manger(request):
     site_map_data = site_map.objects.all().order_by('-id')
@@ -97,7 +92,6 @@ def site_manger(request):
             # if DB.commit() is not None:
             #     contex['msg'] = DB.commit()
     return render(request, 'sitemanger/index.html', contex)
-
 
 def site_manger_delete(request):
     try:
