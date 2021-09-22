@@ -1,0 +1,69 @@
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-center" id="exampleModalLabel">Add New Site</h5>
+                <button type="button" class="close close_add" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <strong>{{ error }}</strong>
+                <form id="ADD_SITE_FORM" action="." method="POST">{% csrf_token %}
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group"><label>Site ID</label><small id="error" style="color: red;"></small>
+                                <input id="siteid_add" name="siteid" required minlength="{{ siteid_.value }}" maxlength="{{ siteid_.value }}" type="text" class="form-control" style="text-transform: uppercase" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group"><label>Site Name</label>
+                                <input id="sitename_add" name="sitename" required maxlength="{{ sitename_.value }}" type="text" class="form-control" style="text-transform: uppercase" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group"><label>longitude</label>
+                                <input id="long_add" name="long" required type="number" class="form-control" step="0.00001" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group"><label>Latitude</label>
+                                <input id="lat_add" name="lat" required type="number" class="form-control" step="0.00001" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group"><label>Site weight<br /></label>
+                                <input id="weight_add" name="weight" required type="number" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row text-center" style="margin-top: 3px;">
+                        <div class="col">
+                            <div class="form-group">
+                                <button id="submitBtn" class="btn btn-primary" type="submit" name="action" value="site_manger_add" disabled><i class="fa fa-check"></i>Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // const form = document.getElementById('ADD_SITE_FORM');
+    // form.addEventListener("change", () => {
+    //     document.getElementById('submitBtn').disabled = !form.checkValidity()
+    // });
+    // form.addEventListener("keyup", () => {
+    //     document.getElementById('submitBtn').disabled = !form.checkValidity()
+    // });
+</script>

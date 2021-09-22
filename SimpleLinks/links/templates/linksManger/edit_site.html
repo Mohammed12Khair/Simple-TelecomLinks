@@ -1,0 +1,69 @@
+<div class="modal fade" id="editform" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-center" id="edit">Edit Site</h5>
+                <button type="button" class="close close_edit" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <strong>{{ error }}</strong>
+                <form id="edit_form" action="." method="POST">{% csrf_token %}
+                    <input name="id" id="id_edit" required hidden>
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group"><label>Site ID</label><small id="error" style="color: red;"></small>
+                                <input name="siteid" id="siteid_edit" required minlength="{{ siteid_.value }}" maxlength="{{ siteid_.value }}" type="text" class="form-control" style="text-transform: uppercase" readonly/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group"><label>Site Name</label>
+                                <input name="sitename" id="sitename_edit" required maxlength="{{ sitename_.value }}" type="text" class="form-control" style="text-transform: uppercase" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group"><label>longitude</label>
+                                <input name="long" id="long_edit" required type="number" class="form-control" step="0.00001" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group"><label>Latitude</label>
+                                <input name="lat" id="lat_edit" required type="number" class="form-control" step="0.00001" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group"><label>Site weight<br /></label>
+                                <input name="weight" id="weight_edit" required type="number" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row text-center" style="margin-top: 3px;">
+                        <div class="col">
+                            <div class="form-group">
+                                <button id="submitBtnEdit" class="btn btn-primary" type="submit" name="action" value="site_manger_edit"><i class="fa fa-check"></i>Edit</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // const editform = document.getElementById('edit_form');
+    // editform.addEventListener("change", () => {
+    //     document.getElementById('submitBtnEdit').disabled = !editform.checkValidity()
+    // });
+    // editform.addEventListener("keyup", () => {
+    //     document.getElementById('submitBtnEdit').disabled = !editform.checkValidity()
+    // });
+</script>

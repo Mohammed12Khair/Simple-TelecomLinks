@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied
 from super_manger.models import siteAttr
-from .models import site_map
+from .models import site_map,links
 
 # cust class
 from .transactions import siteaction
@@ -118,3 +118,19 @@ def initialization_(request):
             return JsonResponse(initialization_data,safe=False)
         return HttpResponse("asd")
     return HttpResponse("asdsad")
+
+
+# Links Manger
+def linksManger(request,siteid):
+    contex={
+        'title':'Links Manger'
+    }
+    try:
+        site=site_map.objects.get(id=siteid)
+        linksdata=links.objects.filter(siteA=siteid)
+        contex['site']=site
+        contex['linksdata']=linksdata
+    except Exception as e:
+        print("Error=>" + str(e))
+        pass
+    return render(request,'linksManger/index.html',contex)

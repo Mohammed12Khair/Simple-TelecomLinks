@@ -2,44 +2,13 @@
 <div class="container-fluid">
     <div class="card shadow">
         <div class="card-header py-3">
-            <p class="text-primary m-0 font-weight-bold">{{ title }} <small style="color: red;;">{{msg}} </small>
-                <button class="btn btn-md btn-success pull-right" data-toggle="modal" data-target="#exampleModal"> <i class="fa fa-plus-circle"></i> Add Site</button>
+            <p class="text-primary m-0 font-weight-bold">{{ title }}<small style="color: red;;">{{msg}}</small>
+                <!-- <button class="btn btn-md btn-success pull-right" data-toggle="modal" data-target="#exampleModal"> <i class="fa fa-plus-circle"></i> Add Site</button> -->
             </p>
         </div>
         <div class="card-body">
             <div class="table-responsive" role="grid" aria-describedby="dataTable_info">
-                <table class="table table-sm" id="myTable">
-                    <thead>
-                        <tr style="font-weight: bold;">
-                            <th>#</th>
-                            <th>SITE NAME</th>
-                            <th>SITE ID</th>
-                            <th>LONG</th>
-                            <th>LAT</th>
-                            <th>WEIGHT</th>
-                            <th>STATUS</th>
-                            <th style="text-align: center;">ACTIONS</th>
-                        </tr>
-                    </thead>
-                    <tbody id="TableData">
-                        {% for i in site_map_data %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td class="{{i.id}}siteid">{{i.siteid}}</td>
-                            <td class="{{i.id}}sitename">{{i.sitename}}</td>
-                            <td class="{{i.id}}long">{{i.long}}</td>
-                            <td class="{{i.id}}lat">{{i.lat}}</td>
-                            <td class="{{i.id}}weight">{{i.weight}}</td>
-                            <td class="{{i.id}}status">{{i.status}}</td>
-                            <td style="text-align: center;">
-                                <a class="btn btn-sm btn-info edit_site_btn"  href="{% url 'linksManger' siteid=i.id %}"  ><i class="fa fa-edit"></i>LINKS</a>
-                                <button class="btn btn-sm btn-info edit_site_btn" data-toggle="modal" data-target="#editform" row="{{i.id}}"><i class="fa fa-edit"></i> EDIT</button>
-                                <button class="btn btn-sm btn-danger delete_btn" row="{{i.id}}"><i class="fa fa-trash"></i> DELETE</button>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+              
             </div>
         </div>
     </div>
