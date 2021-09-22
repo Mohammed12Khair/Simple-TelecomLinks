@@ -11,13 +11,11 @@ def login_view(request):
         # s = Server('ldap://192.168.1.11')
         # c = Connection(s, user=request.POST['username'] + "@sd.zain.com", password=request.POST['password'])	
         # c.bind()
-        # print("Done")
         user = authenticate(
             username=request.POST['username'], password=request.POST['password'])
         if user is not None:
             login(request, user)
             return HttpResponseRedirect('home/')
-            return HttpResponse('Enter')
         else:
             contex['error'] = 'Wrong username or password'
             return render(request, 'login.html', contex)
