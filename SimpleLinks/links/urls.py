@@ -7,6 +7,6 @@ urlpatterns = [
     path('site_manger_delete/', site_manger_delete,name="delete"),
     path('linksManger/<int:siteid>', linksManger,name="linksManger"),
     path('maps/', maps,name="maps"),
-    path('maps/initialization_', initialization_,name="initialization_"),
+    path('maps/map_controller', map_controller,name="map_controller"),
 
 ]

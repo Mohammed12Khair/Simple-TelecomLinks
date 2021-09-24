@@ -1,7 +1,7 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
-# from ldap3 import Server, Connection, ALL
+from ldap3 import Server, Connection, ALL
 
 def login_view(request):
     contex = {
@@ -9,10 +9,12 @@ def login_view(request):
     }
     if request.method == 'POST':
         # s = Server('ldap://192.168.1.11')
-        # c = Connection(s, user=request.POST['username'] + "@sd.zain.com", password=request.POST['password'])	
-        # c.bind()
-        user = authenticate(
-            username=request.POST['username'], password=request.POST['password'])
+        # username=request.POST['username']
+        # password=request.POST['password']
+        # c = Connection(s, user=username + "@sd.zain.com", password=password)	
+        # c.auto_bind()
+        # return HttpResponse("asdasd") 
+        user = authenticate(username=request.POST['username'], password=request.POST['password'])
         if user is not None:
             login(request, user)
             return HttpResponseRedirect('home/')

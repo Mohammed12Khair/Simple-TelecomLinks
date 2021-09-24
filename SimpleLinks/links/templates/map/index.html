@@ -36,7 +36,7 @@
     function initialization_() {
         $.ajax({
             type: "POST",
-            url: '../maps/initialization_',
+            url: '../maps/map_controller',
             data: {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 'action': 'initialization_'
@@ -57,7 +57,6 @@
                     marker.bindPopup(new_popup).openPopup();
                     marker.addTo(mymap);
                 }
-                // mymap.setView([51.505, -0.15])
             }
         });
     }

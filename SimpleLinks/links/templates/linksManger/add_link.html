@@ -12,39 +12,22 @@
                 <form id="ADD_SITE_FORM" action="." method="POST">{% csrf_token %}
                     <div class="form-row">
                         <div class="col">
-                            <div class="form-group"><label>Site ID</label><small id="error" style="color: red;"></small>
+                            <div class="form-group"><label>Site A</label><small id="error" style="color: red;"></small>
                                 <input id="siteid_add" name="siteid" required minlength="{{ siteid_.value }}" maxlength="{{ siteid_.value }}" type="text" class="form-control" style="text-transform: uppercase" />
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="col">
-                            <div class="form-group"><label>Site Name</label>
-                                <input id="sitename_add" name="sitename" required maxlength="{{ sitename_.value }}" type="text" class="form-control" style="text-transform: uppercase" />
+                            <div class="form-group"><label>Site B</label><small id="error" style="color: red;"></small>
+                                <select class="js-data-example-ajax"></select>
                             </div>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <div class="form-group"><label>longitude</label>
-                                <input id="long_add" name="long" required type="number" class="form-control" step="0.00001" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <div class="form-group"><label>Latitude</label>
-                                <input id="lat_add" name="lat" required type="number" class="form-control" step="0.00001" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <div class="form-group"><label>Site weight<br /></label>
-                                <input id="weight_add" name="weight" required type="number" class="form-control" />
-                            </div>
-                        </div>
-                    </div>
+
+
+
+
                     <div class="form-row text-center" style="margin-top: 3px;">
                         <div class="col">
                             <div class="form-group">
@@ -67,3 +50,9 @@
     //     document.getElementById('submitBtn').disabled = !form.checkValidity()
     // });
 </script>
+
+
+{% block jscode %}
+<script>
+</script>
+{% endblock %}

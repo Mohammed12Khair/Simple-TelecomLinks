@@ -1,4 +1,6 @@
 {% extends 'layout/base.html' %} {% block content %}
+
+<input id="BaseSite" value="{{siteid}}" hidden>
 <div class="container-fluid">
     <div class="card shadow">
         <div class="card-header py-3">
@@ -9,6 +11,9 @@
         <div class="card-body">
             <div class="row">
                 <div class="col">
+                    <div class="" style="text-align: left;">
+                        <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus-circle"></i>Link</button>
+                    </div>
                     <table class="table">
                         <tr>
                             <th>#</th>
@@ -26,6 +31,7 @@
                             {% endfor %}
                         </tbody>
                     </table>
+
                 </div>
                 <div class="col">
                     <div style="height:780px;width: 100%;" id="mapid"></div>
@@ -38,7 +44,7 @@
 </div>
 
 
-{% include 'sitemanger/add_site.html' %} {% include 'sitemanger/edit_site.html' %} {% endblock %} {% block chart %}
+{% include 'linksManger/add_link.html' %} {% include 'linksManger/edit_link.html' %} {% endblock %} {% block chart %}
 <script>
     var mymap = L.map('mapid', {
         attributionControl: false
@@ -53,207 +59,135 @@
         accessToken: 'your.mapbox.access.token'
     }).addTo(mymap);
 
-    var marker = new L.marker([51.505, -0.13]).addTo(mymap);
-    var marker = new L.marker([51.505, -0.10]).addTo(mymap);
-    var pointA = new L.LatLng(51.505, -0.13);
-    var pointB = new L.LatLng(51.505, -0.10);
-    var pointList = [pointA, pointB];
 
-    var firstpolyline = new L.Polyline(pointList, {
-        color: 'green',
-        weight: 10,
-        opacity: 0.5,
-        smoothFactor: 1
-    });
-    var new_popup = L.popup({
-        "autoClose": false,
-        "closeOnClick": null
-    });
-    new_popup.setContent("Asdasdasd");
-    firstpolyline.bindPopup(new_popup).openPopup();
-    firstpolyline.addTo(mymap);
+    function initialization_() {
+        var BaseSite = $('#BaseSite').val();
+        // console.log(BaseSite);
+        $.ajax({
+            type: "POST",
+            url: '../maps/map_controller',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                'action': 'linkManger_',
+                'siteid': BaseSite
+            },
+            success: function(data) {
+                // for (var i = 0; i < data.length; i++) {
+                //     console.log(data[i].siteid);
+                //     marker = new L.marker([data[i].long, data[i].lat], {
+                //             'alt': data[i].siteid
+                //         })
+                //         .bindPopup(data[i].siteid);
+                //     var new_popup = L.popup({
+                //         "autoClose": false,
+                //         "closeOnClick": null
+                //     });
+                //     new_popup.setContent(data[i].siteid + "<br>" + data[i].long + "<br>" + data[i].lat);
+                //     marker.bindPopup(new_popup).openPopup();
+                //     marker.addTo(mymap);
+                // }
+            }
+        });
+    }
+
+    initialization_();
+
+    // var marker = new L.marker([51.505, -0.13]).addTo(mymap);
+    // var marker = new L.marker([51.505, -0.10]).addTo(mymap);
+    // var pointA = new L.LatLng(51.505, -0.13);
+    // var pointB = new L.LatLng(51.505, -0.10);
+    // var pointList = [pointA, pointB];
+    // var firstpolyline = new L.Polyline(pointList, {
+    //     color: 'green',
+    //     weight: 10,
+    //     opacity: 0.5,
+    //     smoothFactor: 1
+    // });
+    // var new_popup = L.popup({
+    //     "autoClose": false,
+    //     "closeOnClick": null
+    // });
+    // new_popup.setContent("Asdasdasd");
+    // firstpolyline.bindPopup(new_popup).openPopup();
+    // firstpolyline.addTo(mymap);
 </script>
 
 
 {% endblock %} {% block jscode %}
 
 <script>
-    $("#edit_form").submit(function(e) {
-        e.preventDefault();
-        $.ajax({
-            type: "POST",
-            url: '../site_manger/',
-            data: {
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                'id': $('#id_edit').val(),
-                'siteid': $('#siteid_edit').val(),
-                'sitename': $('#sitename_edit').val(),
-                'long': $('#long_edit').val(),
-                'lat': $('#lat_edit').val(),
-                'weight': $('#weight_edit').val(),
-                'action': $('#submitBtnEdit').val(),
-                // 'siteid': $('#siteid_add').val(),
-            },
-            success: function(data) {
-                // console.log(data.error);
-                // console.log(data.msg);
-                // console.log(data.TableData);
-                if (data.error == 0) {
-                    swal(data.msg, {
-                        icon: "success",
-                    });
-                    $('#TableData').html(data.TableData);
-                    $('.close_edit').click();
-                    $('#id_edit').val('');
-                    $('#siteid_edit').val('');
-                    $('#sitename_edit').val('');
-                    $('#long_edit').val('');
-                    $('#lat_edit').val('');
-                    $('#weight_edit').val('');
-                } else {
-                    swal(data.msg, {
-                        icon: "error",
-                    });
-                    $('#TableData').html(data.TableData);
-                }
-            }
-        });
-    });
-
-    $("#ADD_SITE_FORM").submit(function(e) {
-        e.preventDefault();
-        $.ajax({
-            type: "POST",
-            url: '../site_manger/',
-            data: {
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                'siteid': $('#siteid_add').val(),
-                'sitename': $('#sitename_add').val(),
-                'long': $('#long_add').val(),
-                'lat': $('#lat_add').val(),
-                'weight': $('#weight_add').val(),
-                'action': $('#submitBtn').val(),
-                // 'siteid': $('#siteid_add').val(),
-            },
-            success: function(data) {
-                // console.log(data.error);
-                // console.log(data.msg);
-                // console.log(data.TableData);
-                if (data.error == 0) {
-                    swal(data.msg, {
-                        icon: "success",
-                    });
-                    $('#TableData').html(data.TableData);
-                    $('.close_add').click();
-                    $('#siteid_add').val('');
-                    $('#sitename_add').val('');
-                    $('#long_add').val('');
-                    $('#lat_add').val('');
-                    $('#weight_add').val('');
-                } else {
-                    swal(data.msg, {
-                        icon: "error",
-                    });
-                    $('#TableData').html(data.TableData);
-                }
-            }
-        });
-    });
-
-
-    $(document).on('click', '.delete_btn', function() {
-        var whichtr = $(this).closest("tr");
-        swal({
-                title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this Site Data!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    $.ajax({
-                        type: "POST",
-                        url: '../site_manger_delete/',
-                        data: {
-                            'id': $(this).attr('row'),
-                            csrfmiddlewaretoken: '{{ csrf_token }}'
-                        },
-                        success: function(data) {
-                            if (data.error == 0) {
-                                swal(data.msg, {
-                                    icon: "success",
-                                });
-                                whichtr.remove();
-                            } else {
-                                swal(data.msg, {
-                                    icon: "error",
-                                });
-                            }
-                        }
-                    });
-                }
-            });
-    });
+    // $(document).on('click', '.delete_btn', function() {
+    //     var whichtr = $(this).closest("tr");
+    //     swal({
+    //             title: "Are you sure?",
+    //             text: "Once deleted, you will not be able to recover this Site Data!",
+    //             icon: "warning",
+    //             buttons: true,
+    //             dangerMode: true,
+    //         })
+    //         .then((willDelete) => {
+    //             if (willDelete) {
+    //                 $.ajax({
+    //                     type: "POST",
+    //                     url: '../site_manger_delete/',
+    //                     data: {
+    //                         'id': $(this).attr('row'),
+    //                         csrfmiddlewaretoken: '{{ csrf_token }}'
+    //                     },
+    //                     success: function(data) {
+    //                         if (data.error == 0) {
+    //                             swal(data.msg, {
+    //                                 icon: "success",
+    //                             });
+    //                             whichtr.remove();
+    //                         } else {
+    //                             swal(data.msg, {
+    //                                 icon: "error",
+    //                             });
+    //                         }
+    //                     }
+    //                 });
+    //             }
+    //         });
+    // });
 
     $(document).ready(function() {
         $('#myTable').DataTable();
     });
 
-    $(document).on('click', '.edit_site_btn', function() {
-        $('#id_edit').val($(this).attr('row'));
-        $('#siteid_edit').val(($('.' + $(this).attr('row') + 'siteid').html()));
-        $('#sitename_edit').val(($('.' + $(this).attr('row') + 'sitename').html()));
-        $('#long_edit').val(($('.' + $(this).attr('row') + 'long').html()));
-        $('#lat_edit').val(($('.' + $(this).attr('row') + 'lat').html()));
-        $('#weight_edit').val(($('.' + $(this).attr('row') + 'weight').html()));
-    });
+    // $(document).on('click', '.edit_site_btn', function() {
+    //     $('#id_edit').val($(this).attr('row'));
+    //     $('#siteid_edit').val(($('.' + $(this).attr('row') + 'siteid').html()));
+    //     $('#sitename_edit').val(($('.' + $(this).attr('row') + 'sitename').html()));
+    //     $('#long_edit').val(($('.' + $(this).attr('row') + 'long').html()));
+    //     $('#lat_edit').val(($('.' + $(this).attr('row') + 'lat').html()));
+    //     $('#weight_edit').val(($('.' + $(this).attr('row') + 'weight').html()));
+    // });
 
 
-    $(document).on('keyup', '#siteid', function() {
-        $.ajax({
-            type: "POST",
-            url: '../site_manger/',
-            data: {
-                'action': 'check_site_name',
-                'siteid': $(this).val(),
-                csrfmiddlewaretoken: '{{ csrf_token }}'
-            },
-            success: function(data) {
-                if (parseInt(data) == 1) {
-                    $('#siteid').css("color", "red");
-                    $('#submitBtnEdit').prop('disabled', true);
-                    $('#error').html('Name already used.');
-                } else {
-                    $('#siteid').css("color", "black");
-                    $('#submitBtnEdit').prop('disabled', false);
-                    $('#error').html('');
-                }
-            }
-        });
-    });
 
-    $(document).on('keyup', '#siteid_add', function() {
-        $.ajax({
-            type: "POST",
-            url: '../site_manger/',
-            data: {
-                'action': 'check_site_name',
-                'siteid': $(this).val(),
-                csrfmiddlewaretoken: '{{ csrf_token }}'
-            },
-            success: function(data) {
-                if (parseInt(data) == 1) {
-                    $('#siteid_add').css("color", "red");
-                    $('#submitBtn').prop('disabled', true);
-                    $('#error').html('Name already used.');
-                } else {
-                    $('#siteid_add').css("color", "black");
-                    $('#submitBtn').prop('disabled', false);
-                    $('#error').html('');
-                }
-            }
-        });
-    });
+
+    // $(document).on('keyup', '#siteid_add', function() {
+    //     $.ajax({
+    //         type: "POST",
+    //         url: '../site_manger/',
+    //         data: {
+    //             'action': 'check_site_name',
+    //             'siteid': $(this).val(),
+    //             csrfmiddlewaretoken: '{{ csrf_token }}'
+    //         },
+    //         success: function(data) {
+    //             if (parseInt(data) == 1) {
+    //                 $('#siteid_add').css("color", "red");
+    //                 $('#submitBtn').prop('disabled', true);
+    //                 $('#error').html('Name already used.');
+    //             } else {
+    //                 $('#siteid_add').css("color", "black");
+    //                 $('#submitBtn').prop('disabled', false);
+    //                 $('#error').html('');
+    //             }
+    //         }
+    //     });
+    // });
 </script>
 {% endblock %}
