@@ -114,17 +114,17 @@ def map_controller(request):
     if request.method == "POST" and request.is_ajax():
         if request.POST['action'] == 'initialization_':
             initialization_data=list(site_map.objects.all().values('siteid','long','lat'))
-            # JSONEncoder(initialization_data)
             return JsonResponse(initialization_data,safe=False)
         if  request.POST['action'] == 'linkManger_':
-            try:
-                site_data=site_map.objects.get(id=request.POST['id'])
-                site_link=links.objects.filter(siteA=site_data.id)
-                data={
-                    'Site':
-                }
-            except Exception as e:
-                pass
+            # try:
+            #     site_data=site_map.objects.get(id=request.POST['id'])
+            #     site_link=links.objects.filter(siteA=site_data.id)
+            #     data={
+            #         'site_data':site_data,
+
+            #     }
+            # except Exception as e:
+            #     pass
             return HttpResponse("asdsad")
     return HttpResponse("asdsad")
 
