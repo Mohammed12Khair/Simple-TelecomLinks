@@ -1,13 +1,16 @@
+import enum
 from json.encoder import JSONEncoder
 from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied
+from h11 import Data
 from super_manger.models import siteAttr
 from .models import site_map,links
-
+from django.urls import reverse
 # cust class
-from .transactions import siteaction
+from .transactions import siteaction,is_ajax
+
 
 # Create your views here.
 def dashboard(request):
@@ -34,7 +37,7 @@ def add_site(request):
             add_site_.save()
             error = 'Site ' + str(siteid) + ' added Succssfuly'
         except Exception as e:
-            error = str(r)
+            error = str(e)
         contex = {
             'siteid_': siteid_,
             'sitename_': sitename_,
@@ -54,12 +57,12 @@ def site_manger(request):
         'title':'Sites Manger'
     }
     if request.method == "POST":
-        if request.POST['action'] == "check_site_name" and request.is_ajax():
+        if request.POST['action'] == "check_site_name" and is_ajax(request):
             if site_map.objects.filter(siteid=request.POST['siteid']).exists():
                 return HttpResponse('1')
             else:
                 return HttpResponse('0')
-        if request.POST['action'] == "site_manger_add" and request.is_ajax():
+        if request.POST['action'] == "site_manger_add" and is_ajax(request):
             DB = siteaction('site_manger_add', request)
             if DB.commit() is not None:
                 status = {
@@ -74,7 +77,7 @@ def site_manger(request):
                     'TableData':DB.TableData()
                 }
             return JsonResponse(status,safe=False)
-        if request.POST['action'] == "site_manger_edit" and request.is_ajax():
+        if request.POST['action'] == "site_manger_edit" and is_ajax(request):
             DB = siteaction('site_manger_edit', request)
             if DB.commit() is not None:
                 status = {
@@ -111,7 +114,7 @@ def maps(request):
     return render(request,'map/index.html',{})
 
 def map_controller(request):
-    if request.method == "POST" and request.is_ajax():
+    if request.method == "POST" and request.is_ajax(request):
         if request.POST['action'] == 'initialization_':
             initialization_data=list(site_map.objects.all().values('siteid','long','lat'))
             return JsonResponse(initialization_data,safe=False)
@@ -144,3 +147,14 @@ def linksManger(request,siteid):
         print("Error=>" + str(e))
         pass
     return render(request,'linksManger/index.html',contex)
+
+# To Reload DataTable{SitesTable} with new Data
+def SitesTable(request):
+    if is_ajax(request):
+        Like=reverse('linksManger', kwargs={'siteid': '1'})
+        DataTable=list(site_map.objects.all().values('id','sitename','siteid','long','lat','weight','status').order_by('-id'))
+        index=0
+        for data in DataTable:
+            DataTable[index]['action']='  <a class="btn btn-sm btn-info edit_site_btn"  href="' + Like + '"  ><i class="fa fa-edit"></i>LINKS</a>'
+            index+=1
+        return JsonResponse(DataTable, safe=False)

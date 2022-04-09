@@ -8,7 +8,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive" role="grid" aria-describedby="dataTable_info">
-                <table class="table table-sm" id="myTable">
+                <table class="table table-sm" id="SitesTable">
                     <thead>
                         <tr style="font-weight: bold;">
                             <th>#</th>
@@ -22,22 +22,11 @@
                         </tr>
                     </thead>
                     <tbody id="TableData">
-                        {% for i in site_map_data %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td class="{{i.id}}siteid">{{i.siteid}}</td>
-                            <td class="{{i.id}}sitename">{{i.sitename}}</td>
-                            <td class="{{i.id}}long">{{i.long}}</td>
-                            <td class="{{i.id}}lat">{{i.lat}}</td>
-                            <td class="{{i.id}}weight">{{i.weight}}</td>
-                            <td class="{{i.id}}status">{{i.status}}</td>
-                            <td style="text-align: center;">
-                                <a class="btn btn-sm btn-info edit_site_btn"  href="{% url 'linksManger' siteid=i.id %}"  ><i class="fa fa-edit"></i>LINKS</a>
-                                <button class="btn btn-sm btn-info edit_site_btn" data-toggle="modal" data-target="#editform" row="{{i.id}}"><i class="fa fa-edit"></i> EDIT</button>
-                                <button class="btn btn-sm btn-danger delete_btn" row="{{i.id}}"><i class="fa fa-trash"></i> DELETE</button>
-                            </td>
-                        </tr>
-                        {% endfor %}
+                        {% comment %} <td style="text-align: center;">
+                            <a class="btn btn-sm btn-info edit_site_btn"  href="{% url 'linksManger' siteid=i.id %}"  ><i class="fa fa-edit"></i>LINKS</a>
+                            <button class="btn btn-sm btn-info edit_site_btn" data-toggle="modal" data-target="#editform" row="{{i.id}}"><i class="fa fa-edit"></i> EDIT</button>
+                            <button class="btn btn-sm btn-danger delete_btn" row="{{i.id}}"><i class="fa fa-trash"></i> DELETE</button>
+                        </td> {% endcomment %}
                     </tbody>
                 </table>
             </div>
@@ -48,6 +37,26 @@
 {% include 'sitemanger/add_site.html' %} {% include 'sitemanger/edit_site.html' %} {% endblock %} {% block jscode %}
 
 <script>
+    
+    var SitesTable = $('#SitesTable').DataTable({
+        "processing": true,
+        "ajax": {
+            "processing": true,
+            "url": "{% url 'SitesTable' %}",
+            "dataSrc": ""
+        },
+        "columns": [
+            { 'data': 'id' },
+            { 'data': 'sitename' },
+            { 'data': 'siteid' },
+            { 'data': 'long' },
+            { 'data': 'lat' },
+            { 'data': 'weight' },
+            { 'data': 'status' },
+            { 'data': 'action' }
+        ]
+    });
+
     $("#edit_form").submit(function(e) {
         e.preventDefault();
         $.ajax({
@@ -106,14 +115,16 @@
                 // 'siteid': $('#siteid_add').val(),
             },
             success: function(data) {
-                // console.log(data.error);
-                // console.log(data.msg);
-                // console.log(data.TableData);
+                  console.log(data.error);
+                 console.log(data.msg);
+                 console.log(data.TableData);
                 if (data.error == 0) {
                     swal(data.msg, {
                         icon: "success",
                     });
-                    $('#TableData').html(data.TableData);
+
+                    SitesTable.ajax.reload();
+                  //  $('#TableData').html(data.TableData);
                     $('.close_add').click();
                     $('#siteid_add').val('');
                     $('#sitename_add').val('');
@@ -121,10 +132,9 @@
                     $('#lat_add').val('');
                     $('#weight_add').val('');
                 } else {
-                    swal(data.msg, {
-                        icon: "error",
-                    });
-                    $('#TableData').html(data.TableData);
+                    swal(data.msg, {icon: "error"});
+                    SitesTable.ajax.reload();
+//                    $('#TableData').html(data.TableData);
                 }
             }
         });
@@ -166,9 +176,10 @@
             });
     });
 
-    $(document).ready(function() {
-        $('#myTable').DataTable();
-    });
+    {% comment %} $(document).ready(function() {
+        $('#SitesTable').DataTable();
+    }); {% endcomment %}
+
 
     $(document).on('click', '.edit_site_btn', function() {
         $('#id_edit').val($(this).attr('row'));

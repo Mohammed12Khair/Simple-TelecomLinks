@@ -22,7 +22,7 @@ class siteaction:
                 return str(e) + " #002"
     def TableData(self):
         html=''
-        counter=0
+        counter=1
         Table_Data=site_map.objects.all().order_by('-id')
         for i in Table_Data:
             html+='<tr>\n'
@@ -37,5 +37,9 @@ class siteaction:
             html+='<button class="btn btn-sm btn-info edit_site_btn" data-toggle="modal" data-target="#editform" row="' + str(i.id) + '"><i class="fa fa-edit"></i> EDIT</button>\n'
             html+='<button class="btn btn-sm btn-danger delete_btn" row="' + str(i.id) + '"><i class="fa fa-trash"></i> DELETE</button>\n'
             html+='</td>\n</tr>\n'
+            counter+=1
         return html
 
+# Check request 
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
