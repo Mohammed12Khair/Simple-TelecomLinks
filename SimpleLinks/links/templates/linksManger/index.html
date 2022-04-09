@@ -1,18 +1,23 @@
-{% extends 'layout/base.html' %} {% block content %}
-
-<input id="BaseSite" value="{{siteid}}" hidden>
-<div class="container-fluid">
-    <div class="card shadow">
-        <div class="card-header py-3">
-            <p class="text-primary m-0 font-weight-bold">{{ title }}<small style="color: red;;">{{msg}}</small>
-                <!-- <button class="btn btn-md btn-success pull-right" data-toggle="modal" data-target="#exampleModal"> <i class="fa fa-plus-circle"></i> Add Site</button> -->
-            </p>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col">
-                    <div class="" style="text-align: left;">
-                        <button class="btn btn-success" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus-circle"></i>Link</button>
+{% extends 'layout/base.html' %}
+{% block content %}
+    <input id="BaseSite" value="{{ siteid }}" hidden>
+    <div class="container-fluid">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <p class="text-primary m-0 font-weight-bold">
+                    {{ title }}<small style="color: red;;">{{ msg }}</small>
+                    <!-- <button class="btn btn-md btn-success pull-right" data-toggle="modal" data-target="#exampleModal"> <i class="fa fa-plus-circle"></i> Add Site</button> -->
+                </p>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="" style="text-align: left;">
+                            <button class="btn btn-success"
+                                    data-toggle="modal"
+                                    data-target="#exampleModal">
+                                <i class="fa fa-plus-circle"></i>Link
+                        </button>
                     </div>
                     <table class="table">
                         <tr>
@@ -23,41 +28,76 @@
                         </tr>
                         <tbody>
                             {% for i in linksdata %}
-                            <tr>
-                                <td>{{i.siteA}}</td>
-                                <td>{{i.siteB}}</td>
-                                <td>{{i.link_name}}</td>
-                            </tr>
+                                <tr>
+                                    <td>{{ i.siteA }}</td>
+                                    <td>{{ i.siteB }}</td>
+                                    <td>{{ i.link_name }}</td>
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-
                 </div>
                 <div class="col">
-                    <div style="height:780px;width: 100%;" id="mapid"></div>
+                    <div style="height:780px;width: 100%;" id="MapUIElement"></div>
                 </div>
-
             </div>
-
         </div>
     </div>
 </div>
+{% include 'linksManger/add_link.html' %}
+{% include 'linksManger/edit_link.html' %}
+{% endblock %}
+{% block chart %}
+    <script>
+{% comment %} 
+1 When document loaded 
+2 Get Currect site info
+3 Start Map set center
+4 Mark Current Site
 
-
-{% include 'linksManger/add_link.html' %} {% include 'linksManger/edit_link.html' %} {% endblock %} {% block chart %}
-<script>
-    var mymap = L.map('mapid', {
-        attributionControl: false
-    }).setView([51.505, -0.09], 13);
+{% endcomment %}
+    var MapUIElement = L.map('MapUIElement', {attributionControl: false})
+    .setView([15.647757, 32.492525], 100);
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibW9oYW1tZWRraGFpciIsImEiOiJja3RqdDVqbHMwMDl1MnZtanoyYmk2Zm5uIn0.CRgLiVlA1l1X86NhaUXAvQ', {
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 18,
-        id: 'mapbox/streets-v11',
-        // id: 'mapbox/satellite',
-        tileSize: 512,
-        zoomOffset: -1,
-        accessToken: 'your.mapbox.access.token'
-    }).addTo(mymap);
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox/streets-v11',
+    //id: 'mapbox/satellite',
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: 'your.mapbox.access.token'
+    }).addTo(MapUIElement);
+
+
+function GetSite(){
+    $.ajax({
+    type: "POST",
+    url: "{% url 'GetSite' %}",
+    data: {
+      id: $(this).attr("row"),
+      csrfmiddlewaretoken: "{{ csrf_token }}",
+    },
+    success: function (GetSite) {
+      $("#id_edit").val(GetSite.id);
+      $("#siteid_edit").val(GetSite.siteid);
+      $("#sitename_edit").val(GetSite.sitename);
+      $("#long_edit").val(GetSite.long);
+      $("#lat_edit").val(GetSite.lat);
+      $("#weight_edit").val(GetSite.weight);
+    },
+  }); 
+}
+    marker = new L.marker([15.647757, 32.492525], {
+        'alt': "siteid"
+    })
+    .bindPopup("data[i].siteid");
+var new_popup = L.popup({
+    "autoClose": false,
+    "closeOnClick": null
+});
+new_popup.setContent("Content");
+marker.bindPopup(new_popup).openPopup();
+marker.addTo(MapUIElement);
 
 
     function initialization_() {
@@ -72,28 +112,28 @@
                 'siteid': BaseSite
             },
             success: function(data) {
-                // for (var i = 0; i < data.length; i++) {
-                //     console.log(data[i].siteid);
-                //     marker = new L.marker([data[i].long, data[i].lat], {
-                //             'alt': data[i].siteid
-                //         })
-                //         .bindPopup(data[i].siteid);
-                //     var new_popup = L.popup({
-                //         "autoClose": false,
-                //         "closeOnClick": null
-                //     });
-                //     new_popup.setContent(data[i].siteid + "<br>" + data[i].long + "<br>" + data[i].lat);
-                //     marker.bindPopup(new_popup).openPopup();
-                //     marker.addTo(mymap);
-                // }
+                 for (var i = 0; i < data.length; i++) {
+                     console.log(data[i].siteid);
+                     marker = new L.marker([data[i].long, data[i].lat], {
+                             'alt': data[i].siteid
+                         })
+                         .bindPopup(data[i].siteid);
+                     var new_popup = L.popup({
+                         "autoClose": false,
+                         "closeOnClick": null
+                     });
+                     new_popup.setContent(data[i].siteid + "<br>" + data[i].long + "<br>" + data[i].lat);
+                     marker.bindPopup(new_popup).openPopup();
+                     marker.addTo(MapUIElement);
+                 }
             }
         });
     }
 
     initialization_();
 
-    // var marker = new L.marker([51.505, -0.13]).addTo(mymap);
-    // var marker = new L.marker([51.505, -0.10]).addTo(mymap);
+    // var marker = new L.marker([51.505, -0.13]).addTo(MapUIElement);
+    // var marker = new L.marker([51.505, -0.10]).addTo(MapUIElement);
     // var pointA = new L.LatLng(51.505, -0.13);
     // var pointB = new L.LatLng(51.505, -0.10);
     // var pointList = [pointA, pointB];
@@ -109,13 +149,11 @@
     // });
     // new_popup.setContent("Asdasdasd");
     // firstpolyline.bindPopup(new_popup).openPopup();
-    // firstpolyline.addTo(mymap);
-</script>
-
-
-{% endblock %} {% block jscode %}
-
-<script>
+    // firstpolyline.addTo(MapUIElement);
+    </script>
+{% endblock %}
+{% block jscode %}
+    <script>
     // $(document).on('click', '.delete_btn', function() {
     //     var whichtr = $(this).closest("tr");
     //     swal({
@@ -189,5 +227,5 @@
     //         }
     //     });
     // });
-</script>
+    </script>
 {% endblock %}

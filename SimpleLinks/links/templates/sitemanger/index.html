@@ -1,240 +1,243 @@
 {% extends 'layout/base.html' %} {% block content %}
 <div class="container-fluid">
-    <div class="card shadow">
-        <div class="card-header py-3">
-            <p class="text-primary m-0 font-weight-bold">{{ title }} <small style="color: red;;">{{msg}} </small>
-                <button class="btn btn-md btn-success pull-right" data-toggle="modal" data-target="#exampleModal"> <i class="fa fa-plus-circle"></i> Add Site</button>
-            </p>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive" role="grid" aria-describedby="dataTable_info">
-                <table class="table table-sm" id="SitesTable">
-                    <thead>
-                        <tr style="font-weight: bold;">
-                            <th>#</th>
-                            <th>SITE NAME</th>
-                            <th>SITE ID</th>
-                            <th>LONG</th>
-                            <th>LAT</th>
-                            <th>WEIGHT</th>
-                            <th>STATUS</th>
-                            <th style="text-align: center;">ACTIONS</th>
-                        </tr>
-                    </thead>
-                    <tbody id="TableData">
-                        {% comment %} <td style="text-align: center;">
-                            <a class="btn btn-sm btn-info edit_site_btn"  href="{% url 'linksManger' siteid=i.id %}"  ><i class="fa fa-edit"></i>LINKS</a>
-                            <button class="btn btn-sm btn-info edit_site_btn" data-toggle="modal" data-target="#editform" row="{{i.id}}"><i class="fa fa-edit"></i> EDIT</button>
-                            <button class="btn btn-sm btn-danger delete_btn" row="{{i.id}}"><i class="fa fa-trash"></i> DELETE</button>
-                        </td> {% endcomment %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+  <div class="card shadow">
+    <div class="card-header py-3">
+      <p class="text-primary m-0 font-weight-bold">
+        {{ title }} <small style="color: red">{{msg}} </small>
+        <button
+          class="btn btn-md btn-success pull-right"
+          data-toggle="modal"
+          data-target="#exampleModal"
+        >
+          <i class="fa fa-plus-circle"></i> Add Site
+        </button>
+      </p>
     </div>
+    <div class="card-body">
+      <div
+        class="table-responsive"
+        role="grid"
+        aria-describedby="dataTable_info"
+      >
+        <table class="table table-sm" id="SitesTable">
+          <thead>
+            <tr style="font-weight: bold">
+              <th>#</th>
+              <th>SITE NAME</th>
+              <th>SITE ID</th>
+              <th>LONG</th>
+              <th>LAT</th>
+              <th>WEIGHT</th>
+              <th>STATUS</th>
+              <th style="text-align: center">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody id="TableData"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
-{% include 'sitemanger/add_site.html' %} {% include 'sitemanger/edit_site.html' %} {% endblock %} {% block jscode %}
+{% include 'sitemanger/add_site.html' %}
+{% include 'sitemanger/edit_site.html'%} 
+{% endblock %} 
 
+{% block jscode %}
 <script>
-    
-    var SitesTable = $('#SitesTable').DataTable({
-        "processing": true,
-        "ajax": {
-            "processing": true,
-            "url": "{% url 'SitesTable' %}",
-            "dataSrc": ""
-        },
-        "columns": [
-            { 'data': 'id' },
-            { 'data': 'sitename' },
-            { 'data': 'siteid' },
-            { 'data': 'long' },
-            { 'data': 'lat' },
-            { 'data': 'weight' },
-            { 'data': 'status' },
-            { 'data': 'action' }
-        ]
-    });
+  var SitesTable = $("#SitesTable").DataTable({
+    scrollY:        "500px",
+    scrollCollapse: true,
+    paging:         false,
+    processing: true,
+    ajax: {
+      processing: true,
+      url: "{% url 'SitesTable' %}",
+      dataSrc: "",
+    },
+    columns: [
+      { data: "id" },
+      { data: "sitename" },
+      { data: "siteid" },
+      { data: "long" },
+      { data: "lat" },
+      { data: "weight" },
+      { data: "status" },
+      { data: "action" },
+    ],
+  });
 
-    $("#edit_form").submit(function(e) {
-        e.preventDefault();
+  $("#edit_form").submit(function (e) {
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: "../site_manger/",
+      data: {
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+        id: $("#id_edit").val(),
+        siteid: $("#siteid_edit").val(),
+        sitename: $("#sitename_edit").val(),
+        long: $("#long_edit").val(),
+        lat: $("#lat_edit").val(),
+        weight: $("#weight_edit").val(),
+        action: $("#submitBtnEdit").val(),
+      },
+      success: function (data) {
+        if (data.error == 0) {
+          swal(data.msg, {
+            icon: "success",
+          });
+          SitesTable.ajax.reload();
+          $(".close_edit").click();
+          $("#id_edit").val("");
+          $("#siteid_edit").val("");
+          $("#sitename_edit").val("");
+          $("#long_edit").val("");
+          $("#lat_edit").val("");
+          $("#weight_edit").val("");
+        } else {
+          swal(data.msg, {
+            icon: "error",
+          });
+          SitesTable.ajax.reload();
+        }
+      },
+    });
+  });
+
+  $("#ADD_SITE_FORM").submit(function (e) {
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: "../site_manger/",
+      data: {
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+        siteid: $("#siteid_add").val(),
+        sitename: $("#sitename_add").val(),
+        long: $("#long_add").val(),
+        lat: $("#lat_add").val(),
+        weight: $("#weight_add").val(),
+        action: $("#submitBtn").val(),
+      },
+      success: function (data) {
+        console.log(data.error);
+        console.log(data.msg);
+        console.log(data.TableData);
+        if (data.error == 0) {
+          swal(data.msg, {
+            icon: "success",
+          });
+          $(".close_add").click();
+          $("#siteid_add").val("");
+          $("#sitename_add").val("");
+          $("#long_add").val("");
+          $("#lat_add").val("");
+          $("#weight_add").val("");
+        } else {
+          swal(data.msg, { icon: "error" });
+        }
+        SitesTable.ajax.reload();
+      },
+    });
+  });
+  $(document).on("click", ".delete_btn", function () {
+    var whichtr = $(this).closest("tr");
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this Site Data!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
         $.ajax({
-            type: "POST",
-            url: '../site_manger/',
-            data: {
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                'id': $('#id_edit').val(),
-                'siteid': $('#siteid_edit').val(),
-                'sitename': $('#sitename_edit').val(),
-                'long': $('#long_edit').val(),
-                'lat': $('#lat_edit').val(),
-                'weight': $('#weight_edit').val(),
-                'action': $('#submitBtnEdit').val(),
-                // 'siteid': $('#siteid_add').val(),
-            },
-            success: function(data) {
-                // console.log(data.error);
-                // console.log(data.msg);
-                // console.log(data.TableData);
-                if (data.error == 0) {
-                    swal(data.msg, {
-                        icon: "success",
-                    });
-                    $('#TableData').html(data.TableData);
-                    $('.close_edit').click();
-                    $('#id_edit').val('');
-                    $('#siteid_edit').val('');
-                    $('#sitename_edit').val('');
-                    $('#long_edit').val('');
-                    $('#lat_edit').val('');
-                    $('#weight_edit').val('');
-                } else {
-                    swal(data.msg, {
-                        icon: "error",
-                    });
-                    $('#TableData').html(data.TableData);
-                }
+          type: "POST",
+          url: "../site_manger_delete/",
+          data: {
+            id: $(this).attr("row"),
+            csrfmiddlewaretoken: "{{ csrf_token }}",
+          },
+          success: function (data) {
+            if (data.error == 0) {
+              swal(data.msg, {
+                icon: "success",
+              });
+
+              whichtr.remove();
+            } else {
+              swal(data.msg, {
+                icon: "error",
+              });
             }
+            SitesTable.ajax.reload();
+          },
         });
+      }
     });
-
-    $("#ADD_SITE_FORM").submit(function(e) {
-        e.preventDefault();
-        $.ajax({
-            type: "POST",
-            url: '../site_manger/',
-            data: {
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                'siteid': $('#siteid_add').val(),
-                'sitename': $('#sitename_add').val(),
-                'long': $('#long_add').val(),
-                'lat': $('#lat_add').val(),
-                'weight': $('#weight_add').val(),
-                'action': $('#submitBtn').val(),
-                // 'siteid': $('#siteid_add').val(),
-            },
-            success: function(data) {
-                  console.log(data.error);
-                 console.log(data.msg);
-                 console.log(data.TableData);
-                if (data.error == 0) {
-                    swal(data.msg, {
-                        icon: "success",
-                    });
-
-                    SitesTable.ajax.reload();
-                  //  $('#TableData').html(data.TableData);
-                    $('.close_add').click();
-                    $('#siteid_add').val('');
-                    $('#sitename_add').val('');
-                    $('#long_add').val('');
-                    $('#lat_add').val('');
-                    $('#weight_add').val('');
-                } else {
-                    swal(data.msg, {icon: "error"});
-                    SitesTable.ajax.reload();
-//                    $('#TableData').html(data.TableData);
-                }
-            }
-        });
+  });
+  $(document).on("click", ".edit_site_btn", function () {
+    $.ajax({
+      type: "POST",
+      url: "{% url 'GetSite' %}",
+      data: {
+        id: $(this).attr("row"),
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      },
+      success: function (GetSite) {
+        $("#id_edit").val(GetSite.id);
+        $("#siteid_edit").val(GetSite.siteid);
+        $("#sitename_edit").val(GetSite.sitename);
+        $("#long_edit").val(GetSite.long);
+        $("#lat_edit").val(GetSite.lat);
+        $("#weight_edit").val(GetSite.weight);
+      },
     });
+  });
 
-
-    $(document).on('click', '.delete_btn', function() {
-        var whichtr = $(this).closest("tr");
-        swal({
-                title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this Site Data!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    $.ajax({
-                        type: "POST",
-                        url: '../site_manger_delete/',
-                        data: {
-                            'id': $(this).attr('row'),
-                            csrfmiddlewaretoken: '{{ csrf_token }}'
-                        },
-                        success: function(data) {
-                            if (data.error == 0) {
-                                swal(data.msg, {
-                                    icon: "success",
-                                });
-                                whichtr.remove();
-                            } else {
-                                swal(data.msg, {
-                                    icon: "error",
-                                });
-                            }
-                        }
-                    });
-                }
-            });
+  $(document).on("keyup", "#siteid", function () {
+    $.ajax({
+      type: "POST",
+      url: "../site_manger/",
+      data: {
+        action: "check_site_name",
+        siteid: $(this).val(),
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      },
+      success: function (data) {
+        if (parseInt(data) == 1) {
+          $("#siteid").css("color", "red");
+          $("#submitBtnEdit").prop("disabled", true);
+          $("#error").html("Name already used.");
+        } else {
+          $("#siteid").css("color", "black");
+          $("#submitBtnEdit").prop("disabled", false);
+          $("#error").html("");
+        }
+      },
     });
+  });
 
-    {% comment %} $(document).ready(function() {
-        $('#SitesTable').DataTable();
-    }); {% endcomment %}
-
-
-    $(document).on('click', '.edit_site_btn', function() {
-        $('#id_edit').val($(this).attr('row'));
-        $('#siteid_edit').val(($('.' + $(this).attr('row') + 'siteid').html()));
-        $('#sitename_edit').val(($('.' + $(this).attr('row') + 'sitename').html()));
-        $('#long_edit').val(($('.' + $(this).attr('row') + 'long').html()));
-        $('#lat_edit').val(($('.' + $(this).attr('row') + 'lat').html()));
-        $('#weight_edit').val(($('.' + $(this).attr('row') + 'weight').html()));
+  $(document).on("keyup", "#siteid_add", function () {
+    $.ajax({
+      type: "POST",
+      url: "../site_manger/",
+      data: {
+        action: "check_site_name",
+        siteid: $(this).val(),
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      },
+      success: function (data) {
+        if (parseInt(data) == 1) {
+          $("#siteid_add").css("color", "red");
+          $("#submitBtn").prop("disabled", true);
+          $("#error").html("Name already used.");
+        } else {
+          $("#siteid_add").css("color", "black");
+          $("#submitBtn").prop("disabled", false);
+          $("#error").html("");
+        }
+      },
     });
-
-
-    $(document).on('keyup', '#siteid', function() {
-        $.ajax({
-            type: "POST",
-            url: '../site_manger/',
-            data: {
-                'action': 'check_site_name',
-                'siteid': $(this).val(),
-                csrfmiddlewaretoken: '{{ csrf_token }}'
-            },
-            success: function(data) {
-                if (parseInt(data) == 1) {
-                    $('#siteid').css("color", "red");
-                    $('#submitBtnEdit').prop('disabled', true);
-                    $('#error').html('Name already used.');
-                } else {
-                    $('#siteid').css("color", "black");
-                    $('#submitBtnEdit').prop('disabled', false);
-                    $('#error').html('');
-                }
-            }
-        });
-    });
-
-    $(document).on('keyup', '#siteid_add', function() {
-        $.ajax({
-            type: "POST",
-            url: '../site_manger/',
-            data: {
-                'action': 'check_site_name',
-                'siteid': $(this).val(),
-                csrfmiddlewaretoken: '{{ csrf_token }}'
-            },
-            success: function(data) {
-                if (parseInt(data) == 1) {
-                    $('#siteid_add').css("color", "red");
-                    $('#submitBtn').prop('disabled', true);
-                    $('#error').html('Name already used.');
-                } else {
-                    $('#siteid_add').css("color", "black");
-                    $('#submitBtn').prop('disabled', false);
-                    $('#error').html('');
-                }
-            }
-        });
-    });
+  });
 </script>
 {% endblock %}
