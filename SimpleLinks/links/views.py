@@ -183,16 +183,6 @@ def SitesTable(request):
 
 
 def GetSite(request):
-    for i in range(100, 900):
-        data = {
-            "siteid": "asda" + str(i),
-            "sitename": "SITENMAME",
-            "long": str(i),
-            "lat": str(i),
-            "weight": str(i)
-        }
-        site_map(siteid=data['siteid'],sitename=data['sitename'],long=data['long'],lat=data['lat'],weight=data['weight']).save()
-
     if request.method == 'POST' and is_ajax(request):
         GetSite = site_map.objects.filter(id=request.POST['id']).values(
             'id', 'sitename', 'siteid', 'long', 'lat', 'weight', 'status')[0]

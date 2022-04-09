@@ -15,7 +15,7 @@
                         <div class="" style="text-align: left;">
                             <button class="btn btn-success"
                                     data-toggle="modal"
-                                    data-target="#exampleModal">
+                                    data-target="#AddNewLink">
                                 <i class="fa fa-plus-circle"></i>Link
                         </button>
                     </div>
@@ -56,48 +56,54 @@
 4 Mark Current Site
 
 {% endcomment %}
-    var MapUIElement = L.map('MapUIElement', {attributionControl: false})
-    .setView([15.647757, 32.492525], 100);
-    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibW9oYW1tZWRraGFpciIsImEiOiJja3RqdDVqbHMwMDl1MnZtanoyYmk2Zm5uIn0.CRgLiVlA1l1X86NhaUXAvQ', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 18,
-    id: 'mapbox/streets-v11',
-    //id: 'mapbox/satellite',
-    tileSize: 512,
-    zoomOffset: -1,
-    accessToken: 'your.mapbox.access.token'
-    }).addTo(MapUIElement);
 
-
-function GetSite(){
-    $.ajax({
+$(document).ready(function(){
+console.log("Ready");
+console.log($('#BaseSite').val());
+$.ajax({
     type: "POST",
     url: "{% url 'GetSite' %}",
     data: {
-      id: $(this).attr("row"),
+      id: $('#BaseSite').val(),
       csrfmiddlewaretoken: "{{ csrf_token }}",
     },
     success: function (GetSite) {
-      $("#id_edit").val(GetSite.id);
-      $("#siteid_edit").val(GetSite.siteid);
-      $("#sitename_edit").val(GetSite.sitename);
-      $("#long_edit").val(GetSite.long);
-      $("#lat_edit").val(GetSite.lat);
-      $("#weight_edit").val(GetSite.weight);
+        console.log("ajax Ready");
+        //Get Center x,y
+        lat=GetSite.lat;
+        long=GetSite.long;
+        //initi Map with base center
+        var MapUIElement = L.map('MapUIElement', {attributionControl: false})
+            .setView([long,lat], 100);
+            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibW9oYW1tZWRraGFpciIsImEiOiJja3RqdDVqbHMwMDl1MnZtanoyYmk2Zm5uIn0.CRgLiVlA1l1X86NhaUXAvQ', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            //id: 'mapbox/satellite',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'your.mapbox.access.token'
+            }).addTo(MapUIElement);
+            console.log("AddPoint");
+            // Add the BaseSite Point
+            AddPoint(GetSite,MapUIElement);
     },
-  }); 
-}
-    marker = new L.marker([15.647757, 32.492525], {
-        'alt': "siteid"
-    })
-    .bindPopup("data[i].siteid");
+  });
+});
+
+
+function AddPoint(GetSite,MapUIElement){
+var marker = new L.marker([GetSite.long, GetSite.lat], {
+        'alt':GetSite.sitename 
+    }).bindPopup(GetSite.siteid);
 var new_popup = L.popup({
     "autoClose": false,
     "closeOnClick": null
 });
-new_popup.setContent("Content");
+new_popup.setContent(GetSite.siteid + " " + GetSite.sitename);
 marker.bindPopup(new_popup).openPopup();
 marker.addTo(MapUIElement);
+}
 
 
     function initialization_() {
@@ -130,7 +136,7 @@ marker.addTo(MapUIElement);
         });
     }
 
-    initialization_();
+   // initialization_();
 
     // var marker = new L.marker([51.505, -0.13]).addTo(MapUIElement);
     // var marker = new L.marker([51.505, -0.10]).addTo(MapUIElement);
