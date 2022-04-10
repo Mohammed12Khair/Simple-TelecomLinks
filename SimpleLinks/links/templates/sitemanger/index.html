@@ -1,4 +1,6 @@
-{% extends 'layout/base.html' %} {% block content %}
+{% extends 'layout/base.html' %}
+
+{% block content %}
 <div class="container-fluid">
   <div class="card shadow">
     <div class="card-header py-3">
@@ -6,19 +8,13 @@
         {{ title }} <small style="color: red">{{msg}} </small>
         <button
           class="btn btn-md btn-success pull-right"
-          data-toggle="modal"
-          data-target="#exampleModal"
-        >
+          data-toggle="modal" data-target="#exampleModal">
           <i class="fa fa-plus-circle"></i> Add Site
         </button>
       </p>
     </div>
     <div class="card-body">
-      <div
-        class="table-responsive"
-        role="grid"
-        aria-describedby="dataTable_info"
-      >
+      <div class="table-responsive" role="grid" aria-describedby="dataTable_info">
         <table class="table table-sm" id="SitesTable">
           <thead>
             <tr style="font-weight: bold">
@@ -32,7 +28,9 @@
               <th style="text-align: center">ACTIONS</th>
             </tr>
           </thead>
-          <tbody id="TableData"></tbody>
+          <tbody id="TableData">
+
+          </tbody>
         </table>
       </div>
     </div>
