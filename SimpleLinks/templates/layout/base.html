@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 {% load static %}
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
@@ -22,18 +21,18 @@
      
     </style>
 </head>
-
 <body id="page-top">
     <div id="wrapper">
         {% include 'layout/sidebar.html' %}
         <div class="d-flex flex-column" id="content-wrapper">
             <div id="content">
-                {% include 'layout/topbar.html' %}
+            {% include 'layout/topbar.html' %}
                 <div class="container-fluid">
-                    {% block content %} {% endblock %}
+            {% block content %}
+            {% endblock %}
                 </div>
             </div>
-            {% include 'layout/footer.html' %}
+{% include 'layout/footer.html' %}
         </div>
         <a class="border rounded d-inline scroll-to-top" href="#page-top">
             <i class="fas fa-angle-up"></i>
@@ -51,7 +50,11 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 
-    {% block chart %} {% endblock %} {% block jscode %} {% endblock %}
+{% block chart %} 
+{% endblock %}
+
+{% block jscode %} 
+{% endblock %}
 
 </body>
 

@@ -1,3 +1,4 @@
+from tkinter import CASCADE
 from django.db import models
 
 # Create your models here.
@@ -12,6 +13,6 @@ class site_map(models.Model):
 	impact_by = models.CharField(max_length=1000,default='')
 
 class links(models.Model):
-	siteA=models.IntegerField()
-	siteB=models.IntegerField()
+	siteA=models.ForeignKey(site_map,related_name="SiteA",on_delete=models.CASCADE,default='')
+	siteB=models.ForeignKey(site_map,related_name="SiteB",on_delete=models.CASCADE,default='')
 	link_name=models.CharField(max_length=500,default='')
