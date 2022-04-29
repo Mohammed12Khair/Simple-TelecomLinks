@@ -1,5 +1,6 @@
 import enum
 from json.encoder import JSONEncoder
+from math import fabs
 from django.http.response import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
@@ -119,22 +120,40 @@ def maps(request):
 
 
 def map_controller(request):
-    if request.method == "POST" and request.is_ajax(request):
+    if request.method == "POST" and is_ajax(request):
         if request.POST['action'] == 'initialization_':
             initialization_data = list(
                 site_map.objects.all().values('siteid', 'long', 'lat'))
             return JsonResponse(initialization_data, safe=False)
         if request.POST['action'] == 'linkManger_':
-            # try:
-            #     site_data=site_map.objects.get(id=request.POST['id'])
-            #     site_link=links.objects.filter(siteA=site_data.id)
-            #     data={
-            #         'site_data':site_data,
-
-            #     }
-            # except Exception as e:
-            #     pass
-            return HttpResponse("asdsad")
+            
+            try:
+                site_data=site_map.objects.get(id=request.POST['siteid'])
+                site_link=list(links.objects.filter(siteA=site_data).values('siteB'))
+                GetSiteBIds=links.objects.filter(siteA=site_data)
+                SiteBId=[]
+                for i in GetSiteBIds:
+                    # print("i.siteB _______")
+                    SiteBId.append(i.siteB.id)
+                    # print(i.siteB.id)
+                    # print(i.siteB.siteid)
+                    # print(i.siteB.sitename)
+                    # print(i.siteB.long)
+                    # print(i.siteB.lat)
+                    # print(i.link_name)
+                SiteBData=list(site_map.objects.filter(id__in=SiteBId).values('id','sitename','siteid','long','lat','status'))
+                # Adding link Status 
+                for link in range(0,len(SiteBData)):
+                    SiteBData[link]['link_name']=links.objects.get(siteB=SiteBData[link]['id']).link_name
+                    # link_data=links.objects.get(siteB=SiteBData[link]['']);
+                # data={
+                #     'site_link':site_link,
+                # }
+                print("linkManger_")
+                return JsonResponse(SiteBData,safe=False)
+            except Exception as e:
+                print("Error",e)
+                pass
     return HttpResponse("asdsad")
 
 

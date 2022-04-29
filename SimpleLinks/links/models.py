@@ -8,7 +8,7 @@ class site_map(models.Model):
 	long = models.CharField(max_length=1000,default='')
 	lat = models.CharField(max_length=1000,default='')
 	weight = models.CharField(max_length=1000,default='')
-	status = models.CharField(max_length=1000,default='')
+	status = models.CharField(max_length=1000,default='up')
 	impact = models.CharField(max_length=1000,default='')
 	impact_by = models.CharField(max_length=1000,default='')
 
