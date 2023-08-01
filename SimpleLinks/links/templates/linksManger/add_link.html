@@ -1,76 +1,115 @@
 <div class="modal fade" id="AddNewLink" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-center" id="exampleModalLabel">Add New Link</h5>
-                <button type="button" class="close close_add" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="exampleModalLabel">Add New Link</h5>
+        <button type="button" class="close close_add" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <strong>{{ error }}</strong>
+        {% comment %}
+        <form id="ADD_SITE_FORM" action="." method="POST">
+          {% csrf_token %} {% endcomment %}
+          <div class="form-row">
+            <div class="col">
+              <div class="form-group">
+                <label>Source</label><small id="error" style="color: red"></small>
+                <input
+                  hidden
+                  readonly
+                  value="{{site.id}}"
+                  id="siteid_add"
+                  name="siteid"
+                  required
+                  minlength="{{ siteid_.value }}"
+                  maxlength="{{ siteid_.value }}"
+                  type="text"
+                  class="form-control"
+                  style="text-transform: uppercase"
+                />
+                <input readonly value="{{site.sitename}}" type="text" class="form-control" style="text-transform: uppercase" />
+              </div>
             </div>
-            <div class="modal-body">
-                <strong>{{ error }}</strong>
-                {% comment %} <form id="ADD_SITE_FORM" action="." method="POST">{% csrf_token %} {% endcomment %}
-                    <div class="form-row">
-                        <div class="col">
-                            <div class="form-group"><label>Source</label><small id="error" style="color: red;"></small>
-                                <input readonly value="{{site.id}}" id="siteid_add" name="siteid" required minlength="{{ siteid_.value }}" maxlength="{{ siteid_.value }}" type="text" class="form-control" style="text-transform: uppercase" />
-                                <input readonly value="{{site.sitename}}" type="text" class="form-control" style="text-transform: uppercase" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col">
-                            <div class="form-group"><label>Link Name</label><small id="error" style="color: red;"></small>
-                                <input readonly value="{{site.id}}" id="siteid_add" name="siteid" required minlength="{{ siteid_.value }}" maxlength="{{ siteid_.value }}" type="text" class="form-control" style="text-transform: uppercase" />
-                                {% comment %} <input readonly value="{{site.sitename}}" type="text" class="form-control" style="text-transform: uppercase" /> {% endcomment %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-5">
-                            <div class="form-group"><label>Destination</label>
-                                <small id="error" style="color: red;"></small>
-                                <button id="Destination">click</button>
-                                <input readonly value="{{site.id}}" id="xDestination" name="siteid" required minlength="{{ siteid_.value }}" maxlength="{{ siteid_.value }}" type="text" class="form-control" style="text-transform: uppercase" />
-                            </div>
-                        </div>
-                    </div>
-
-
-
-
-                    <div class="form-row text-center" style="margin-top: 3px;">
-                        <div class="col">
-                            <div class="form-group">
-                                <button id="submitBtn" class="btn btn-primary" type="submit" name="action" value="site_manger_add" disabled><i class="fa fa-check"></i>Add</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+          </div>
+          <div class="form-row">
+            <div class="col">
+              <div class="form-group">
+                <label>Link Name</label><small id="error" style="color: red"></small>
+                <input
+                  value="{{site.id}}"
+                  id="siteid_add"
+                  name="siteid"
+                  required
+                  minlength="{{ siteid_.value }}"
+                  maxlength="{{ siteid_.value }}"
+                  type="text"
+                  class="form-control"
+                  style="text-transform: uppercase"
+                />
+                {% comment %} <input readonly value="{{site.sitename}}" type="text" class="form-control" style="text-transform: uppercase" /> {% endcomment %}
+              </div>
             </div>
-        </div>
+          </div>
+          <div class="form-row">
+            <div class="col">
+              <div class="form-group">
+                <label>Destination</label>
+                <small id="error" style="color: red"></small>
+                <select class="form-control">
+                  {% for x in sites_destination %}
+                  <option value="{{x.sitename}}">{{x.sitename}}</option>
+                  {% endfor %}
+                </select>
+                {% comment %}
+                <input
+                  value="{{site.id}}"
+                  id="Destination"
+                  name="siteid"
+                  required
+                  minlength="{{ siteid_.value }}"
+                  maxlength="{{ siteid_.value }}"
+                  type="text"
+                  class="form-control"
+                  style="text-transform: uppercase"
+                />
+                {% endcomment %}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row text-center" style="margin-top: 3px">
+            <div class="col">
+              <div class="form-group">
+                <button id="submitBtn" class="btn btn-primary" type="submit" name="action" value="site_manger_add" disabled><i class="fa fa-check"></i>Add</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
 
 <script>
-    // const form = document.getElementById('ADD_SITE_FORM');
-    // form.addEventListener("change", () => {
-    //     document.getElementById('submitBtn').disabled = !form.checkValidity()
-    // });
-    // form.addEventListener("keyup", () => {
-    //     document.getElementById('submitBtn').disabled = !form.checkValidity()
-    // });
+  // const form = document.getElementById('ADD_SITE_FORM');
+  // form.addEventListener("change", () => {
+  //     document.getElementById('submitBtn').disabled = !form.checkValidity()
+  // });
+  // form.addEventListener("keyup", () => {
+  //     document.getElementById('submitBtn').disabled = !form.checkValidity()
+  // });
 </script>
-
 
 {% block jscode %}
 <script>
-    $(document).on('#Destination','click',function (){
-alert("Selected");
-    });
-    // In your Javascript (external .js resource or <script> tag)
-$(document).ready(function() {
-    $('.js-example-basic-single').select2();
-});
+  $(document).on("#Destination", "click", function () {
+    alert("Selected");
+  });
+  // In your Javascript (external .js resource or <script> tag)
+  $(document).ready(function () {
+    $(".js-example-basic-single").select2();
+  });
 </script>
 {% endblock %}

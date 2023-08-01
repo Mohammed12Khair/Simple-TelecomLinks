@@ -9,7 +9,7 @@ from h11 import Data
 from super_manger.models import siteAttr
 from .models import site_map, links
 from django.urls import reverse
-# cust class
+
 from .transactions import siteaction, is_ajax
 
 
@@ -126,12 +126,13 @@ def map_controller(request):
                 site_map.objects.all().values('siteid', 'long', 'lat'))
             return JsonResponse(initialization_data, safe=False)
         if request.POST['action'] == 'linkManger_':
-            
+
             try:
-                site_data=site_map.objects.get(id=request.POST['siteid'])
-                site_link=list(links.objects.filter(siteA=site_data).values('siteB'))
-                GetSiteBIds=links.objects.filter(siteA=site_data)
-                SiteBId=[]
+                site_data = site_map.objects.get(id=request.POST['siteid'])
+                site_link = list(links.objects.filter(
+                    siteA=site_data).values('siteB'))
+                GetSiteBIds = links.objects.filter(siteA=site_data)
+                SiteBId = []
                 for i in GetSiteBIds:
                     # print("i.siteB _______")
                     SiteBId.append(i.siteB.id)
@@ -141,36 +142,44 @@ def map_controller(request):
                     # print(i.siteB.long)
                     # print(i.siteB.lat)
                     # print(i.link_name)
-                SiteBData=list(site_map.objects.filter(id__in=SiteBId).values('id','sitename','siteid','long','lat','status'))
-                # Adding link Status 
-                for link in range(0,len(SiteBData)):
-                    SiteBData[link]['link_name']=links.objects.get(siteB=SiteBData[link]['id']).link_name
+                SiteBData = list(site_map.objects.filter(id__in=SiteBId).values(
+                    'id', 'sitename', 'siteid', 'long', 'lat', 'status'))
+                # Adding link Status
+                for link in range(0, len(SiteBData)):
+                    SiteBData[link]['link_name'] = links.objects.get(
+                        siteB=SiteBData[link]['id']).link_name
                     # link_data=links.objects.get(siteB=SiteBData[link]['']);
                 # data={
                 #     'site_link':site_link,
                 # }
                 print("linkManger_")
-                return JsonResponse(SiteBData,safe=False)
+                return JsonResponse(SiteBData, safe=False)
             except Exception as e:
-                print("Error",e)
+                print("Error", e)
                 pass
     return HttpResponse("asdsad")
 
 
 # Links Manger
 def linksManger(request, siteid):
+    # return HttpResponse(siteid)
+    siteid_value=siteid
     contex = {
         'title': 'Links Manger'
     }
     try:
-        site = site_map.objects.get(id=siteid)
-        linksdata = links.objects.filter(siteA=siteid)
+        site = site_map.objects.get(id=siteid_value)
+        linksdata = links.objects.filter(siteA=siteid_value)
+        sites_destination = site_map.objects.all()
+        print(len(sites_destination))
         contex['site'] = site
         contex['linksdata'] = linksdata
         contex['siteid'] = siteid
+        contex['sites_destination'] = sites_destination
     except Exception as e:
         print("Error=>" + str(e))
         pass
+
     return render(request, 'linksManger/index.html', contex)
 
 # To Reload DataTable{SitesTable} with new Data

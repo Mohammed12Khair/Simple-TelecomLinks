@@ -25,6 +25,7 @@
                             <th>Site A</th>
                             <th>Site B</th>
                             <th>Link Name</th>
+                            <th>Status</th>
                         </tr>
                         <tbody>
                             {% for i in linksdata %}
@@ -33,6 +34,7 @@
                                     <td>{{ i.siteA.sitename }}</td>
                                     <td>{{ i.siteB.sitename }}</td>
                                     <td>{{ i.link_name }}</td>
+                                    <td>{{ i.Status }}</td>
                                 </tr>
                             {% endfor %}
 
@@ -267,7 +269,8 @@ marker.addTo(MapUIElement);
     //                                 icon: "success",
     //                             });
     //                             whichtr.remove();
-    //                         } else {
+    //                         } else {Ftable
+
     //                             swal(data.msg, {
     //                                 icon: "error",
     //                             });
