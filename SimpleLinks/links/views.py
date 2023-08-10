@@ -15,6 +15,11 @@ from .transactions import siteaction, is_ajax
 
 # Create your views here.
 def dashboard(request):
+    file_ = open("feeds.txt", "r")
+    for i in file_:
+        line = str(i).split(",")
+        site_map(siteid=line[0], sitename=line[1],
+                 weight=line[4], long=line[2], lat=line[3]).save()
     return render(request, 'home/dashboard.html', {})
 
 
@@ -162,23 +167,29 @@ def map_controller(request):
 
 # Links Manger
 def linksManger(request, siteid):
-    # return HttpResponse(siteid)
-    siteid_value=siteid
     contex = {
         'title': 'Links Manger'
     }
+
+    if request.method == "POST":
+        site_a = request.POST['site_a']
+        link_name = request.POST['link_name']
+        site_b = request.POST['site_b']
+        links(siteA=site_map.objects.get(siteid=site_a),
+              siteB=site_map.objects.get(siteid=site_b),
+              link_name=link_name
+              ).save()
+
     try:
-        site = site_map.objects.get(id=siteid_value)
-        linksdata = links.objects.filter(siteA=siteid_value)
+        site = site_map.objects.get(id=siteid)
+        linksdata = links.objects.filter(siteA=siteid)
         sites_destination = site_map.objects.all()
-        print(len(sites_destination))
         contex['site'] = site
         contex['linksdata'] = linksdata
         contex['siteid'] = siteid
         contex['sites_destination'] = sites_destination
     except Exception as e:
         print("Error=>" + str(e))
-        pass
 
     return render(request, 'linksManger/index.html', contex)
 

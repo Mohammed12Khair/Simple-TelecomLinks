@@ -9,19 +9,20 @@
       </div>
       <div class="modal-body">
         <strong>{{ error }}</strong>
-        {% comment %}
-        <form id="ADD_SITE_FORM" action="." method="POST">
-          {% csrf_token %} {% endcomment %}
+     
+
+        <form id="ADD_SITE_FORM" action="{% url 'linksManger' site.id  %}" method="POST">
+          {% csrf_token %}
           <div class="form-row">
             <div class="col">
               <div class="form-group">
-                <label>Source</label><small id="error" style="color: red"></small>
+                <label>Source   </label><small id="error" style="color: red"></small>
                 <input
                   hidden
                   readonly
-                  value="{{site.id}}"
+                  value="{{site.siteid}}"
                   id="siteid_add"
-                  name="siteid"
+                  name="site_a"
                   required
                   minlength="{{ siteid_.value }}"
                   maxlength="{{ siteid_.value }}"
@@ -38,12 +39,9 @@
               <div class="form-group">
                 <label>Link Name</label><small id="error" style="color: red"></small>
                 <input
-                  value="{{site.id}}"
-                  id="siteid_add"
-                  name="siteid"
+                  value=""
+                  name="link_name"
                   required
-                  minlength="{{ siteid_.value }}"
-                  maxlength="{{ siteid_.value }}"
                   type="text"
                   class="form-control"
                   style="text-transform: uppercase"
@@ -57,9 +55,9 @@
               <div class="form-group">
                 <label>Destination</label>
                 <small id="error" style="color: red"></small>
-                <select class="form-control">
+                <select class="form-control" name="site_b">
                   {% for x in sites_destination %}
-                  <option value="{{x.sitename}}">{{x.sitename}}</option>
+                  <option value="{{x.siteid}}">{{x.sitename}}</option>
                   {% endfor %}
                 </select>
                 {% comment %}
@@ -82,7 +80,7 @@
           <div class="form-row text-center" style="margin-top: 3px">
             <div class="col">
               <div class="form-group">
-                <button id="submitBtn" class="btn btn-primary" type="submit" name="action" value="site_manger_add" disabled><i class="fa fa-check"></i>Add</button>
+                <button id="submitBtn" class="btn btn-primary" type="submit" name="action" value="site_manger_add"><i class="fa fa-check"></i>Add</button>
               </div>
             </div>
           </div>

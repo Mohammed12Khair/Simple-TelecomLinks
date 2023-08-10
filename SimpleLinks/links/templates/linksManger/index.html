@@ -1,23 +1,18 @@
-{% extends 'layout/base.html' %}
-{% block content %}
-    <input id="BaseSite" value="{{ siteid }}" hidden>
-    <div class="container-fluid">
-        <div class="card shadow">
-            <div class="card-header py-3">
-                <p class="text-primary m-0 font-weight-bold">
-                    {{ title }}<small style="color: red;;">{{ msg }}</small>
-                    <!-- <button class="btn btn-md btn-success pull-right" data-toggle="modal" data-target="#exampleModal"> <i class="fa fa-plus-circle"></i> Add Site</button> -->
-                </p>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col">
-                        <div class="" style="text-align: left;">
-                            <button class="btn btn-success"
-                                    data-toggle="modal"
-                                    data-target="#AddNewLink">
-                                <i class="fa fa-plus-circle"></i>Link
-                        </button>
+{% extends 'layout/base.html' %} {% block content %} {% load custom_tags %}
+<input id="BaseSite" value="{{ siteid }}" hidden />
+<div class="container-fluid">
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <p class="text-primary m-0 font-weight-bold">
+                {{ title }}<small style="color: red">{{ msg }}</small>
+                <!-- <button class="btn btn-md btn-success pull-right" data-toggle="modal" data-target="#exampleModal"> <i class="fa fa-plus-circle"></i> Add Site</button> -->
+            </p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    <div class="" style="text-align: left">
+                        <button class="btn btn-success" data-toggle="modal" data-target="#AddNewLink"><i class="fa fa-plus-circle"></i>Link</button>
                     </div>
                     <table class="table">
                         <tr>
@@ -29,129 +24,124 @@
                         </tr>
                         <tbody>
                             {% for i in linksdata %}
-                                <tr>
-                                    <td>{{ forloop.counter }}</td>
-                                    <td>{{ i.siteA.sitename }}</td>
-                                    <td>{{ i.siteB.sitename }}</td>
-                                    <td>{{ i.link_name }}</td>
-                                    <td>{{ i.Status }}</td>
-                                </tr>
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ i.siteA.sitename }}</td>
+                                <td>{{ i.siteB.sitename }}</td>
+                                <td>{{ i.link_name }}</td>
+                                <td>{% getLinkStatus i.siteA.siteid %}</td>
+                            </tr>
                             {% endfor %}
-
-                           
                         </tbody>
                     </table>
                 </div>
                 <div class="col">
-                    <div style="height:780px;width: 100%;" id="MapUIElement"></div>
+                    <div style="height: 780px; width: 100%" id="MapUIElement"></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% include 'linksManger/add_link.html' %}
-{% include 'linksManger/edit_link.html' %}
-{% endblock %}
-{% block chart %}
-    <script>
-{% comment %} 
-1 When document loaded 
-2 Get Currect site info
-3 Start Map set center
-4 Mark Current Site
+{% include 'linksManger/add_link.html' %} {% include 'linksManger/edit_link.html' %} {% endblock %} {% block chart %}
+<script>
+    {% comment %}
+    1 When document loaded
+    2 Get Currect site info
+    3 Start Map set center
+    4 Mark Current Site
 
-{% endcomment %}
+    {% endcomment %}
 
-//$(document).ready(function(){
-console.log($('#BaseSite').val());
-$.ajax({
-    type: "POST",
-    url: "{% url 'GetSite' %}",
-    data: {
-      id: $('#BaseSite').val(),
-      csrfmiddlewaretoken: "{{ csrf_token }}",
-    },
-    success: function (GetSite) {
-        console.log("ajax Ready");
-        //Get Center x,y
-        lat=GetSite.lat;
-        long=GetSite.long;
-        //initi Map with base center
-        let MapUIElement = L.map('MapUIElement', {attributionControl: false})
-            .setView([long,lat], 100);
+    //$(document).ready(function(){
+    console.log($('#BaseSite').val());
+    $.ajax({
+        type: "POST",
+        url: "{% url 'GetSite' %}",
+        data: {
+            id: $('#BaseSite').val(),
+            csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        success: function (GetSite) {
+            console.log("ajax Ready");
+            //Get Center x,y
+            lat = GetSite.lat;
+            long = GetSite.long;
+            //initi Map with base center
+            let MapUIElement = L.map('MapUIElement', { attributionControl: false })
+                .setView([long, lat], 100);
             L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibW9oYW1tZWRraGFpciIsImEiOiJja3RqdDVqbHMwMDl1MnZtanoyYmk2Zm5uIn0.CRgLiVlA1l1X86NhaUXAvQ', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            maxZoom: 18,
-            id: 'mapbox/streets-v11',
-            //id: 'mapbox/satellite',
-            tileSize: 512,
-            zoomOffset: -1,
-            accessToken: 'your.mapbox.access.token'
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                maxZoom: 18,
+                id: 'mapbox/streets-v11',
+                //id: 'mapbox/satellite',
+                tileSize: 512,
+                zoomOffset: -1,
+                accessToken: 'your.mapbox.access.token'
             }).addTo(MapUIElement);
             console.log("AddPoint");
             // Add the BaseSite Point
-            AddPoint(GetSite,MapUIElement);
-            initialization_(MapUIElement,GetSite);
+            AddPoint(GetSite, MapUIElement);
+            initialization_(MapUIElement, GetSite);
             //alert(MapUIElement);
-    },
-  });
-//});
+        },
+    });
+    //});
 
 
-function AddPoint(GetSite,MapUIElement){
-    alert(GetSite.long + "  " + GetSite.lat + " " + GetSite.sitename);
-var marker = new L.marker([GetSite.long, GetSite.lat], {
-        'alt':GetSite.sitename 
-    }).bindPopup(GetSite.siteid);
-var new_popup = new L.popup({
-    "autoClose": false,
-    "closeOnClick": null
-});
-new_popup.setContent(GetSite.siteid + " " + GetSite.sitename + " "+GetSite.long + "  " + GetSite.lat  );
-marker.bindPopup(new_popup).openPopup();
-marker.addTo(MapUIElement);
-}
+    function AddPoint(GetSite, MapUIElement) {
+
+        var marker = new L.marker([GetSite.long, GetSite.lat], {
+            'alt': GetSite.sitename
+        }).bindPopup(GetSite.siteid);
+        var new_popup = new L.popup({
+            "autoClose": false,
+            "closeOnClick": null
+        });
+        new_popup.setContent(GetSite.siteid + " " + GetSite.sitename + " " + GetSite.long + "  " + GetSite.lat);
+        marker.bindPopup(new_popup).openPopup();
+        marker.addTo(MapUIElement);
+    }
 
 
-function AddPointWithLine(GetSite,MapUIElement,Centeral){
-    alert(GetSite.long + "  " + GetSite.lat + " " + GetSite.sitename);
-var marker = new L.marker([GetSite.long, GetSite.lat], {
-        'alt':GetSite.sitename 
-    }).bindPopup(GetSite.siteid);
-var new_popup = new L.popup({
-    "autoClose": false,
-    "closeOnClick": null
-});
-new_popup.setContent(GetSite.siteid + "<br>" + GetSite.sitename + "<br>" +GetSite.long + "<br>" + GetSite.lat);
-marker.bindPopup(new_popup).openPopup();
+    function AddPointWithLine(GetSite, MapUIElement, Centeral) {
+
+        var marker = new L.marker([GetSite.long, GetSite.lat], {
+            'alt': GetSite.sitename
+        }).bindPopup(GetSite.siteid);
+        var new_popup = new L.popup({
+            "autoClose": false,
+            "closeOnClick": null
+        });
+        new_popup.setContent(GetSite.siteid + "<br>" + GetSite.sitename + "<br>" + GetSite.long + "<br>" + GetSite.lat);
+        marker.bindPopup(new_popup).openPopup();
 
 
-var pointA = new L.LatLng(Centeral.long, Centeral.lat);
-var pointB = new L.LatLng(GetSite.long, GetSite.lat);
-var pointList = [pointA, pointB];
-if(GetSite.status =="up"){
-var Coler="green";
-}else{
-    var Coler="red";
-}
- var firstpolyline = new L.Polyline(pointList, {
-       color: Coler,
-       weight: 10,
-       opacity: 0.5,
-       smoothFactor: 1
-   });
+        var pointA = new L.LatLng(Centeral.long, Centeral.lat);
+        var pointB = new L.LatLng(GetSite.long, GetSite.lat);
+        var pointList = [pointA, pointB];
+        if (GetSite.status == "up") {
+            var Coler = "green";
+        } else {
+            var Coler = "red";
+        }
+        var firstpolyline = new L.Polyline(pointList, {
+            color: Coler,
+            weight: 10,
+            opacity: 0.5,
+            smoothFactor: 1
+        });
 
-   var link_pop= new L.popup({
-    "autoClose": false,
-    "closeOnClick": null
-});
-link_pop.setContent(GetSite.link_name);
-firstpolyline.bindPopup(link_pop).openPopup();
-    firstpolyline.addTo(MapUIElement);
+        var link_pop = new L.popup({
+            "autoClose": false,
+            "closeOnClick": null
+        });
+        link_pop.setContent(GetSite.link_name);
+        firstpolyline.bindPopup(link_pop).openPopup();
+        firstpolyline.addTo(MapUIElement);
 
-marker.addTo(MapUIElement);
-}
-    function initialization_(MapUIElement,GetSite) {
+        marker.addTo(MapUIElement);
+    }
+    function initialization_(MapUIElement, GetSite) {
         var BaseSite = $('#BaseSite').val();
         // console.log(BaseSite);
         $.ajax({
@@ -162,90 +152,64 @@ marker.addTo(MapUIElement);
                 'action': 'linkManger_',
                 'siteid': BaseSite
             },
-            success: function(SiteBData) {
-               console.log(SiteBData.length)
-                 for (var i = 0; i < SiteBData.length; i++) {
-                     console.log("___________Start");
-                     console.log(SiteBData[i].sitename);
-                     console.log(SiteBData[i].siteid);
-                     console.log(SiteBData[i].long);
-                     console.log(SiteBData[i].lat);
-                     console.log("_____________end "); 
-                     AddPointWithLine(SiteBData[i],MapUIElement,GetSite);
-                 }
+            success: function (SiteBData) {
+                console.log(SiteBData.length)
+                for (var i = 0; i < SiteBData.length; i++) {
+                    console.log("___________Start");
+                    console.log(SiteBData[i].sitename);
+                    console.log(SiteBData[i].siteid);
+                    console.log(SiteBData[i].long);
+                    console.log(SiteBData[i].lat);
+                    console.log("_____________end ");
+                    AddPointWithLine(SiteBData[i], MapUIElement, GetSite);
+                }
             }
         });
     }
-  
-
-
-    // var marker = new L.marker([51.505, -0.13]).addTo(MapUIElement);
-    // var marker = new L.marker([51.505, -0.10]).addTo(MapUIElement);
-    // var pointA = new L.LatLng(51.505, -0.13);
-    // var pointB = new L.LatLng(51.505, -0.10);
-    // var pointList = [pointA, pointB];
-    // var firstpolyline = new L.Polyline(pointList, {
-    //     color: 'green',
-    //     weight: 10,
-    //     opacity: 0.5,
-    //     smoothFactor: 1
-    // });
-    // var new_popup = L.popup({
-    //     "autoClose": false,
-    //     "closeOnClick": null
-    // });
-    // new_popup.setContent("Asdasdasd");
-    // firstpolyline.bindPopup(new_popup).openPopup();
-    // firstpolyline.addTo(MapUIElement);
-    </script>
-{% endblock %}
-{% block jscode %}
-    <script>
-
-        $(document).ready(function(){
-            $('.siteB_input').on('click',function(){
-              //alert("dada");
-            });
+</script>
+{% endblock %} {% block jscode %}
+<script>
+    $(document).ready(function () {
+        $(".siteB_input").on("click", function () {
+            //alert("dada");
         });
-
-
-    $(document).on('foucus', '.siteB_inpudt', function() {
-        var whichtr = $(this).closest("tr");
-        swal({
-                title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this Site Data!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    $.ajax({
-                        type: "POST",
-                        url: '../site_manger_delete/',
-                        data: {
-                            'id': $(this).attr('row'),
-                            csrfmiddlewaretoken: '{{ csrf_token }}'
-                        },
-                        success: function(data) {
-                            if (data.error == 0) {
-                                swal(data.msg, {
-                                    icon: "success",
-                                });
-                                whichtr.remove();
-                            } else {
-                                swal(data.msg, {
-                                    icon: "error",
-                                });
-                            }
-                        }
-                    });
-                }
-            });
     });
 
- 
-  //  $(document).on('click', '.delete_btn', function() {
+    $(document).on("foucus", ".siteB_inpudt", function () {
+        var whichtr = $(this).closest("tr");
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this Site Data!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    type: "POST",
+                    url: "../site_manger_delete/",
+                    data: {
+                        id: $(this).attr("row"),
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                    },
+                    success: function (data) {
+                        if (data.error == 0) {
+                            swal(data.msg, {
+                                icon: "success",
+                            });
+                            whichtr.remove();
+                        } else {
+                            swal(data.msg, {
+                                icon: "error",
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    });
+
+    //  $(document).on('click', '.delete_btn', function() {
     //     var whichtr = $(this).closest("tr");
     //     swal({
     //             title: "Are you sure?",
@@ -281,43 +245,40 @@ marker.addTo(MapUIElement);
     //         });
     // });
 
-    $(document).ready(function() {
-        $('#myTable').DataTable();
+    $(document).ready(function () {
+        $("#myTable").DataTable();
     });
 
-    // $(document).on('click', '.edit_site_btn', function() {
-    //     $('#id_edit').val($(this).attr('row'));
-    //     $('#siteid_edit').val(($('.' + $(this).attr('row') + 'siteid').html()));
-    //     $('#sitename_edit').val(($('.' + $(this).attr('row') + 'sitename').html()));
-    //     $('#long_edit').val(($('.' + $(this).attr('row') + 'long').html()));
-    //     $('#lat_edit').val(($('.' + $(this).attr('row') + 'lat').html()));
-    //     $('#weight_edit').val(($('.' + $(this).attr('row') + 'weight').html()));
-    // });
+  // $(document).on('click', '.edit_site_btn', function() {
+  //     $('#id_edit').val($(this).attr('row'));
+  //     $('#siteid_edit').val(($('.' + $(this).attr('row') + 'siteid').html()));
+  //     $('#sitename_edit').val(($('.' + $(this).attr('row') + 'sitename').html()));
+  //     $('#long_edit').val(($('.' + $(this).attr('row') + 'long').html()));
+  //     $('#lat_edit').val(($('.' + $(this).attr('row') + 'lat').html()));
+  //     $('#weight_edit').val(($('.' + $(this).attr('row') + 'weight').html()));
+  // });
 
-
-
-
-    // $(document).on('keyup', '#siteid_add', function() {
-    //     $.ajax({
-    //         type: "POST",
-    //         url: '../site_manger/',
-    //         data: {
-    //             'action': 'check_site_name',
-    //             'siteid': $(this).val(),
-    //             csrfmiddlewaretoken: '{{ csrf_token }}'
-    //         },
-    //         success: function(data) {
-    //             if (parseInt(data) == 1) {
-    //                 $('#siteid_add').css("color", "red");
-    //                 $('#submitBtn').prop('disabled', true);
-    //                 $('#error').html('Name already used.');
-    //             } else {
-    //                 $('#siteid_add').css("color", "black");
-    //                 $('#submitBtn').prop('disabled', false);
-    //                 $('#error').html('');
-    //             }
-    //         }
-    //     });
-    // });
-    </script>
+  // $(document).on('keyup', '#siteid_add', function() {
+  //     $.ajax({
+  //         type: "POST",
+  //         url: '../site_manger/',
+  //         data: {
+  //             'action': 'check_site_name',
+  //             'siteid': $(this).val(),
+  //             csrfmiddlewaretoken: '{{ csrf_token }}'
+  //         },
+  //         success: function(data) {
+  //             if (parseInt(data) == 1) {
+  //                 $('#siteid_add').css("color", "red");
+  //                 $('#submitBtn').prop('disabled', true);
+  //                 $('#error').html('Name already used.');
+  //             } else {
+  //                 $('#siteid_add').css("color", "black");
+  //                 $('#submitBtn').prop('disabled', false);
+  //                 $('#error').html('');
+  //             }
+  //         }
+  //     });
+  // });
+</script>
 {% endblock %}
