@@ -15,11 +15,11 @@ from .transactions import siteaction, is_ajax
 
 # Create your views here.
 def dashboard(request):
-    file_ = open("feeds.txt", "r")
-    for i in file_:
-        line = str(i).split(",")
-        site_map(siteid=line[0], sitename=line[1],
-                 weight=line[4], long=line[2], lat=line[3]).save()
+    # file_ = open("feeds.txt", "r")
+    # for i in file_:
+    #     line = str(i).split(",")
+    #     site_map(siteid=line[0], sitename=line[1],
+    #              weight=line[4], long=line[2], lat=line[3]).save()
     return render(request, 'home/dashboard.html', {})
 
 
